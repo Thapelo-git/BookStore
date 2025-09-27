@@ -34,3 +34,12 @@ export interface ApiResponse<T> {
     pages: number;
   };
 }
+
+export interface BookQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  available?: boolean;
+}
