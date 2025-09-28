@@ -1,7 +1,5 @@
-import { Types } from 'mongoose';
-
 export interface IBook {
-  _id?: Types.ObjectId | string;
+  _id?: string;
   title: string;
   author: string;
   isbn: string;
@@ -18,7 +16,7 @@ export interface BookCreateRequest {
   author: string;
   isbn: string;
   publishedYear: number;
-  available?: boolean;
+  available: boolean;
   genre?: string;
   description?: string;
 }
