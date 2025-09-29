@@ -1,7 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { Book, BookCreateRequest, BookUpdateRequest, ApiResponse, BookQueryParams } from '../types/book';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+// Use environment variable for API URL with fallback
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,32 +12,28 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// Add response interceptor for better error handling
 api.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
+  (error) => {
     console.error('API Error:', error.response?.data || error.message);
     throw error;
   }
 );
 
 export const bookAPI = {
-  // Update the getBooks method to properly handle query params:
-getBooks: async (params: BookQueryParams = {}): Promise<ApiResponse<Book[]>> => {
-  // Clean up params - remove undefined values
-  const cleanParams: Record<string, string> = {};
-  
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      cleanParams[key] = value.toString();
-    }
-  });
+  getBooks: async (params: BookQueryParams = {}): Promise<ApiResponse<Book[]>> => {
+    const queryParams = new URLSearchParams();
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        queryParams.append(key, value.toString());
+      }
+    });
 
-  const queryString = new URLSearchParams(cleanParams).toString();
-  const url = queryString ? `/books?${queryString}` : '/books';
-  
-  const response = await api.get(url);
-  return response.data;
-},
+    const response = await api.get(`/books?${queryParams}`);
+    return response.data;
+  },
 
   getBook: async (id: string): Promise<ApiResponse<Book>> => {
     const response = await api.get(`/books/${id}`);
