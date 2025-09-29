@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Book, BookCreateRequest, BookUpdateRequest, ApiResponse, BookQueryParams } from '../types/book';
 
 // Use environment variable for API URL with fallback
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bookstore-api-0rnb.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
