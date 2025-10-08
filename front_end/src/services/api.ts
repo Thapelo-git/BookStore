@@ -1,62 +1,69 @@
 import axios from 'axios';
-import { Book, BookCreateRequest, BookUpdateRequest, ApiResponse, BookQueryParams } from '../types/book';
+import { 
+  LoginCredentials, 
+  RegisterCredentials, 
+  BookCreateRequest, 
+  BookUpdateRequest,
+  BookQueryParams
+} from '../types/book';
 
-// Use environment variable for API URL with fallback
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bookstore-api-0rnb.onrender.com/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000,
 });
 
-// Add response interceptor for better error handling
+// Add token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Handle token expiration
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
-    throw error;
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
   }
 );
 
-export const bookAPI = {
-  getBooks: async (params: BookQueryParams = {}): Promise<ApiResponse<Book[]>> => {
-    const queryParams = new URLSearchParams();
-    
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        queryParams.append(key, value.toString());
-      }
-    });
-
-    const response = await api.get(`/books?${queryParams}`);
-    return response.data;
-  },
-
-  getBook: async (id: string): Promise<ApiResponse<Book>> => {
-    const response = await api.get(`/books/${id}`);
-    return response.data;
-  },
-
-  createBook: async (bookData: BookCreateRequest): Promise<ApiResponse<Book>> => {
-    const response = await api.post('/books', bookData);
-    return response.data;
-  },
-
-  updateBook: async (id: string, bookData: BookUpdateRequest): Promise<ApiResponse<Book>> => {
-    const response = await api.put(`/books/${id}`, bookData);
-    return response.data;
-  },
-
-  deleteBook: async (id: string): Promise<ApiResponse<void>> => {
-    const response = await api.delete(`/books/${id}`);
-    return response.data;
-  },
-
-  healthCheck: async (): Promise<{ status: string; database: string }> => {
-    const response = await api.get('/health');
-    return response.data;
-  }
+export const authService = {
+  login: (credentials: LoginCredentials) => 
+    api.post('/auth/login', credentials),
+  
+  register: (credentials: RegisterCredentials) => 
+    api.post('/auth/register', credentials),
+  
+  getProfile: () => api.get('/auth/profile'),
 };
+
+export const bookService = {
+  getAll: (params?: BookQueryParams) => 
+    api.get('/books', { params }),
+  
+  getById: (id: string) => 
+    api.get(`/books/${id}`),
+  
+  create: (book: BookCreateRequest) => 
+    api.post('/books', book),
+  
+  update: (id: string, book: BookUpdateRequest) => 
+    api.put(`/books/${id}`, book),
+  
+  delete: (id: string) => 
+    api.delete(`/books/${id}`),
+  
+  search: (query: string, params?: BookQueryParams) =>
+    api.get('/books/search', { 
+      params: { search: query, ...params } 
+    }),
+};
+
+export default api;

@@ -1,3 +1,9 @@
+export interface User {
+  _id: string;
+  email: string;
+  name: string;
+}
+
 export interface Book {
   _id: string;
   title: string;
@@ -42,4 +48,32 @@ export interface BookQueryParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   available?: boolean;
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
+  logout: () => void;
+  clearError: () => void;
 }
