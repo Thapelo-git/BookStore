@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { isAxiosError } from 'axios';
 import { AuthState, LoginCredentials, RegisterCredentials } from '../types/book';
 import { authService } from '../services/api';
 
@@ -29,12 +30,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
     } catch (err: unknown) {
       let errorMessage = 'Login failed';
-      
-      if (typeof err === 'object' && err !== null) {
-        const axiosError = err as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
+      if (isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
       }
-      
       set({ 
         error: errorMessage, 
         isLoading: false 
@@ -63,12 +63,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
     } catch (err: unknown) {
       let errorMessage = 'Registration failed';
-      
-      if (typeof err === 'object' && err !== null) {
-        const axiosError = err as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
+      if (isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message || errorMessage;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
       }
-      
       set({ 
         error: errorMessage, 
         isLoading: false 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-
+import { isAxiosError } from 'axios';
 interface LocationState {
   from?: {
     pathname?: string;
@@ -29,14 +29,21 @@ const LoginPage: React.FC = () => {
   }, [email, password, clearError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await login({ email, password });
-      // Navigation happens automatically due to the useEffect above
-    } catch (error) {
-          console.error('Error occurred:', error)
+  e.preventDefault();
+  try {
+    await login({ email, password });
+    // Navigation happens automatically
+  } catch (error: unknown) {
+    let message = 'Login failed';
+    if (isAxiosError(error)) {
+      message = error.response?.data?.message || error.message || message;
+    } else if (error instanceof Error) {
+      message = error.message;
     }
-  };
+    // Set error in local state or store
+    console.error('Error occurred:', message);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">

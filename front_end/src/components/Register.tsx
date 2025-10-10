@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-
+import  { isAxiosError } from 'axios';
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -84,10 +84,16 @@ const RegisterPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
       });
-      navigate('/books');
-    } catch (error) {
-         console.error('Error occurred:', error)
-    }
+      navigate('/books');} catch (error: unknown) {
+  let message = 'Registration failed';
+  if (isAxiosError(error)) {
+    message = error.response?.data?.message || error.message || message;
+  } else if (error instanceof Error) {
+    message = error.message;
+  }
+  setPasswordError(message);
+  console.error('Error occurred:', error);
+}
   };
 
   const nameError = getFieldError('name', formData.name);
