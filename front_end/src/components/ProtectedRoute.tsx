@@ -1,71 +1,40 @@
+// components/ProtectedRoute.tsx
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { authService } from '../services/api';
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, token, user, logout } = useAuthStore();
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, token, user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [isValidToken, setIsValidToken] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const verifyToken = async () => {
-      if (!token) {
-        setIsLoading(false);
-        setIsValidToken(false);
-        return;
-      }
+    console.log('🔐 ProtectedRoute Check:', {
+      hasToken: !!token,
+      isAuthenticated,
+      hasUser: !!user,
+      token: token ? 'EXISTS' : 'MISSING'
+    });
 
-      try {
-        // If we have a token but no user data, try to get the profile
-        if (token && !user) {
-          const response = await authService.getProfile();
-          if (response.data.success && response.data.data) {
-            useAuthStore.getState().user = response.data.data;
-            setIsValidToken(true);
-          } else {
-            throw new Error('Invalid token');
-          }
-        } else {
-          setIsValidToken(true);
-        }
-      } catch (error) {
-        console.error('Token verification failed:', error);
-        logout();
-        setIsValidToken(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // Short delay to ensure auth state is loaded
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 100);
 
-    verifyToken();
-  }, [token, user, logout]);
+    return () => clearTimeout(timer);
+  }, [isAuthenticated, token, user]);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Checking authentication...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  if (!isAuthenticated || !isValidToken) {
-    // Redirect to login page with return url
-    return (
-      <Navigate 
-        to="/login" 
-        state={{ from: location }} 
-        replace 
-      />
-    );
+  if (!isAuthenticated || !token) {
+    console.log('🚫 Not authenticated, redirecting to login');
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

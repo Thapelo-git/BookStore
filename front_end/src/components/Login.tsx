@@ -16,10 +16,11 @@ const LoginPage: React.FC = () => {
   const location = useLocation();
 
    const state = location.state as LocationState | null;
-  const from = state?.from?.pathname || "/books";
+  const from = state?.from?.pathname || "/";
 
   useEffect(() => {
     if (isAuthenticated) {
+      console.log('User authenticated, navigating to:', from);
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, from]);
@@ -33,6 +34,7 @@ const LoginPage: React.FC = () => {
   try {
     await login({ email, password });
     // Navigation happens automatically
+      console.log('Login successful, useEffect will handle navigation');
   } catch (error: unknown) {
     let message = 'Login failed';
     if (isAxiosError(error)) {

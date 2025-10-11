@@ -1,132 +1,136 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Book, BookQueryParams } from '../types/book';
-import { bookService } from '../services/api';
 
-const BookList: React.FC = () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState<BookQueryParams>({
-    page: 1,
-    limit: 10,
-    available: undefined,
-    sortBy: 'title',
-    sortOrder: 'asc'
-  });
+interface BookListProps {
+  books?: Book[];
+  loading: boolean;
+  error: string | null;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+  filters?: BookQueryParams;
+  onEdit?: (book: Book) => void; // Make optional
+  onDelete?: (id: string) => void; // Make optional
+  onFiltersChange?: (filters: BookQueryParams) => void; // Make optional
+  onRefresh?: () => void; // Make optional
+}
 
-  useEffect(() => {
-    loadBooks();
+const BookList: React.FC<BookListProps> = ({
+  books,
+  loading,
+  error,
+  pagination,
+  filters,
+  onEdit,
+  onDelete,
+  onFiltersChange,
+  onRefresh
+}) => {
+  // Use useMemo for safe defaults
+  const safeFilters = useMemo((): BookQueryParams => {
+    return filters || {
+      page: 1,
+      limit: 9,
+      sortBy: 'createdAt',
+      sortOrder: 'desc'
+    };
   }, [filters]);
 
-  const loadBooks = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      const response = await bookService.getAll(filters);
-      
-      // Handle the ApiResponse structure
-      if (response.data.success) {
-        setBooks(response.data.data || []);
-      } else {
-        setError(response.data.message || 'Failed to load books');
-      }
-    } catch (err: unknown) {
-      let errorMessage = 'Failed to load books';
-      
-      if (typeof err === 'object' && err !== null) {
-        const axiosError = err as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const safeBooks = useMemo((): Book[] => {
+    return books || [];
+  }, [books]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFilters(prev => ({
-      ...prev,
-      search: searchTerm,
-      page: 1
-    }));
-  };
-
-  const handleFilterChange = <K extends keyof BookQueryParams>(
-  key: K,
-  value: BookQueryParams[K]
-) => {
-  setFilters(prev => ({
-    ...prev,
-    [key]: value,
-    page: 1,
-  }));
-};
-
-
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this book?')) return;
-    
-    try {
-      const response = await bookService.delete(id);
-      
-      if (response.data.success) {
-        setBooks(books.filter(book => book._id !== id));
-        // Show success message or reload books
-        await loadBooks();
-      } else {
-        setError(response.data.message || 'Failed to delete book');
-      }
-    } catch (err: unknown) {
-      let errorMessage = 'Failed to delete book';
-      
-      if (typeof err === 'object' && err !== null) {
-        const axiosError = err as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
-      }
-      
-      setError(errorMessage);
-    }
-  };
-
-  const toggleAvailability = async (book: Book) => {
-    try {
-      const response = await bookService.update(book._id, {
-        available: !book.available
-      });
-      
-      if (response.data.success && response.data.data) {
-        setBooks(books.map(b => 
-          b._id === book._id ? response.data.data! : b
-        ));
-      }
-    } catch (err: unknown) {
-      let errorMessage = 'Failed to update book';
-      
-      if (typeof err === 'object' && err !== null) {
-        const axiosError = err as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
-      }
-      
-      setError(errorMessage);
-    }
-  };
-
-  const clearFilters = () => {
-    setSearchTerm('');
-    setFilters({
+  const safePagination = useMemo(() => {
+    return pagination || {
       page: 1,
-      limit: 10,
-      available: undefined,
-      sortBy: 'title',
-      sortOrder: 'asc'
-    });
-  };
+      limit: 9,
+      total: 0,
+      pages: 0
+    };
+  }, [pagination]);
 
-  if (loading) {
+  // Safe callback functions
+  const safeOnFiltersChange = useCallback((newFilters: BookQueryParams) => {
+    if (onFiltersChange) {
+      onFiltersChange(newFilters);
+    } else {
+      console.warn('onFiltersChange callback is not defined');
+    }
+  }, [onFiltersChange]);
+
+  const safeOnEdit = useCallback((book: Book) => {
+    if (onEdit) {
+      onEdit(book);
+    } else {
+      console.warn('onEdit callback is not defined');
+    }
+  }, [onEdit]);
+
+  const safeOnDelete = useCallback((id: string) => {
+    if (onDelete) {
+      onDelete(id);
+    } else {
+      console.warn('onDelete callback is not defined');
+    }
+  }, [onDelete]);
+
+  const safeOnRefresh = useCallback(() => {
+    if (onRefresh) {
+      onRefresh();
+    } else {
+      console.warn('onRefresh callback is not defined');
+    }
+  }, [onRefresh]);
+
+  const [searchTerm, setSearchTerm] = useState(safeFilters.search || '');
+
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm !== safeFilters.search) {
+        safeOnFiltersChange({
+          ...safeFilters,
+          search: searchTerm,
+          page: 1
+        });
+      }
+    }, 500);
+
+     return () => clearTimeout(timer);
+  }, [searchTerm, safeFilters, safeOnFiltersChange]);
+
+  // Trigger search when debounced term changes
+  
+const handleFilterChange = useCallback((key: keyof BookQueryParams, value: any) => {
+    safeOnFiltersChange({
+      ...safeFilters,
+      [key]: value,
+      page: key !== 'page' ? 1 : value
+    });
+  }, [safeFilters, safeOnFiltersChange]);
+
+ const handlePageChange = useCallback((newPage: number) => {
+    safeOnFiltersChange({
+      ...safeFilters,
+      page: newPage
+    });
+  }, [safeFilters, safeOnFiltersChange]);
+
+  const clearFilters = useCallback(() => {
+    setSearchTerm('');
+    safeOnFiltersChange({
+      page: 1,
+      limit: 9,
+      sortBy: 'createdAt',
+      sortOrder: 'desc'
+    });
+  }, [safeOnFiltersChange]);
+
+  if (loading && safeBooks.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -140,22 +144,16 @@ const BookList: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Book Library</h1>
-          <p className="text-gray-600 mt-2">Manage your book collection</p>
+          <p className="text-gray-600 mt-2">
+            Showing {safeBooks.length} of {safePagination.total} books
+            {safeFilters.search && ` for "${safeFilters.search}"`}
+          </p>
         </div>
-        <Link
-          to="/books/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2"
-        >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Add New Book</span>
-        </Link>
       </div>
 
       {/* Search and Filters */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <form onSubmit={handleSearch} className="flex gap-4 mb-4">
+        <div className="flex gap-4 mb-4">
           <div className="flex-1">
             <input
               type="text"
@@ -166,23 +164,22 @@ const BookList: React.FC = () => {
             />
           </div>
           <button
-            type="submit"
+            onClick={safeOnRefresh}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
           >
-            Search
+            Refresh
           </button>
           <button
-            type="button"
             onClick={clearFilters}
             className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium"
           >
             Clear
           </button>
-        </form>
+        </div>
 
         <div className="flex gap-4 flex-wrap">
           <select
-            value={filters.available?.toString() || ''}
+            value={safeFilters.available?.toString() || ''}
             onChange={(e) => handleFilterChange('available', 
               e.target.value === '' ? undefined : e.target.value === 'true'
             )}
@@ -194,7 +191,7 @@ const BookList: React.FC = () => {
           </select>
 
           <select
-            value={filters.sortBy}
+            value={safeFilters.sortBy || 'title'}
             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
@@ -205,17 +202,22 @@ const BookList: React.FC = () => {
           </select>
 
           <select
-            value={filters.sortOrder}
-            onChange={(e) => {
-  const value = e.target.value;
-  if (value === 'asc' || value === 'desc') {
-    handleFilterChange('sortOrder', value);
-  }
-}}
+            value={safeFilters.sortOrder || 'asc'}
+            onChange={(e) => handleFilterChange('sortOrder', e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
+          </select>
+
+          <select
+            value={safeFilters.limit || 9}
+            onChange={(e) => handleFilterChange('limit', parseInt(e.target.value))}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="9">9 per page</option>
+            <option value="18">18 per page</option>
+            <option value="27">27 per page</option>
           </select>
         </div>
       </div>
@@ -233,7 +235,7 @@ const BookList: React.FC = () => {
 
       {/* Books Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {books.map((book) => (
+        {safeBooks.map((book) => (
           <div key={book._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-200">
             <div className="p-6">
               <div className="flex justify-between items-start mb-3">
@@ -260,6 +262,9 @@ const BookList: React.FC = () => {
               <div className="text-sm text-gray-500 mb-4 space-y-1">
                 <p><span className="font-medium">Published:</span> {book.publishedYear}</p>
                 <p><span className="font-medium">ISBN:</span> {book.isbn}</p>
+                {book.createdAt && (
+                  <p><span className="font-medium">Added:</span> {new Date(book.createdAt).toLocaleDateString()}</p>
+                )}
               </div>
 
               {book.description && (
@@ -270,17 +275,17 @@ const BookList: React.FC = () => {
 
               <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                 <div className="flex space-x-3">
-                  <Link
-                    to={`/books/edit/${book._id}`}
+                  <button
+                    onClick={() => safeOnEdit(book)}
                     className="text-blue-600 hover:text-blue-900 text-sm font-medium flex items-center space-x-1"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     <span>Edit</span>
-                  </Link>
+                  </button>
                   <button
-                    onClick={() => handleDelete(book._id)}
+                    onClick={() => safeOnDelete(book._id)}
                     className="text-red-600 hover:text-red-900 text-sm font-medium flex items-center space-x-1"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -289,17 +294,6 @@ const BookList: React.FC = () => {
                     <span>Delete</span>
                   </button>
                 </div>
-                
-                <button
-                  onClick={() => toggleAvailability(book)}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
-                    book.available
-                      ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border border-yellow-200'
-                      : 'bg-green-100 text-green-800 hover:bg-green-200 border border-green-200'
-                  }`}
-                >
-                  {book.available ? 'Mark Unavailable' : 'Mark Available'}
-                </button>
               </div>
             </div>
           </div>
@@ -307,25 +301,40 @@ const BookList: React.FC = () => {
       </div>
       
       {/* Empty State */}
-      {books.length === 0 && !loading && (
+      {safeBooks.length === 0 && !loading && (
         <div className="text-center py-16 bg-white rounded-lg shadow">
           <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
           <h3 className="mt-4 text-lg font-medium text-gray-900">No books found</h3>
           <p className="mt-2 text-gray-500">
-            {filters.search ? 'Try adjusting your search terms or filters' : 'Get started by adding your first book'}
+            {safeFilters.search ? 'Try adjusting your search terms or filters' : 'Get started by adding your first book'}
           </p>
-          {!filters.search && (
-            <div className="mt-6">
-              <Link
-                to="/books/new"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
-              >
-                Add Your First Book
-              </Link>
-            </div>
-          )}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {safePagination.pages > 1 && (
+        <div className="flex justify-center items-center space-x-4 pt-6">
+          <button
+            onClick={() => handlePageChange(safePagination.page - 1)}
+            disabled={safePagination.page <= 1}
+            className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors duration-200"
+          >
+            Previous
+          </button>
+          
+          <span className="text-sm text-gray-600">
+            Page {safePagination.page} of {safePagination.pages} ({safePagination.total} total books)
+          </span>
+          
+          <button
+            onClick={() => handlePageChange(safePagination.page + 1)}
+            disabled={safePagination.page >= safePagination.pages}
+            className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors duration-200"
+          >
+            Next
+          </button>
         </div>
       )}
     </div>

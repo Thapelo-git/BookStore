@@ -1,16 +1,17 @@
-import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 import Navigation from './components/Navigation';
 import LoginPage from './components/Login';
 import RegisterPage from './components/Register';
-
 import BookForm from './components/BookForm';
 import ProtectedRoute from './components/ProtectedRoute';
-import  BookList  from './components/BookList';
+
+import Home from './pages/Home'; // Make sure you have this
+import BooksPage from './pages/BooksPage';
 
 function App() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated  } = useAuthStore();
 
   return (
     <Router>
@@ -20,19 +21,29 @@ function App() {
         <main>
           <Routes>
             <Route 
+              path="/" 
+              element={
+                isAuthenticated ? (
+                  <Home />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              } 
+            />
+            <Route 
               path="/login" 
-              element={!isAuthenticated ? <LoginPage /> : <Navigate to="/books" replace />} 
+              element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" replace />} 
             />
             <Route 
               path="/register" 
-              element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/books" replace />} 
+              element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/" replace />} 
             />
             <Route
               path="/books"
               element={
                 <ProtectedRoute>
                   <div className="container mx-auto px-4 py-8">
-                    <BookList/>
+                    <BooksPage/>
                   </div>
                 </ProtectedRoute>
               }
@@ -56,10 +67,6 @@ function App() {
                   </div>
                 </ProtectedRoute>
               }
-            />
-            <Route 
-              path="/" 
-              element={<Navigate to="/books" replace />} 
             />
           </Routes>
         </main>
