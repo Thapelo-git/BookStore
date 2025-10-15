@@ -49,10 +49,18 @@ api.interceptors.request.use((config) => {
 
 // Enhanced response interceptor with better error handling
 api.interceptors.response.use(
-  (response) => {
-    console.log(`✅ API Response #${requestCount}: ${response.status} ${response.config.url}`);
+  
+     (response) => {
+    console.log(`✅ API Response: ${response.status} ${response.config.url}`, {
+      success: response.data?.success,
+      data: response.data?.data ? 'EXISTS' : 'MISSING',
+      dataIsArray: Array.isArray(response.data?.data),
+      dataType: typeof response.data?.data,
+      fullData: response.data // Be careful - this might be large
+    });
     return response;
   },
+   
   async (error) => {
     console.log(`❌ API Error #${requestCount}:`, {
       status: error.response?.status,

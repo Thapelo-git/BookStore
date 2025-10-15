@@ -25,6 +25,8 @@ export const useAuthStore = create<AuthState>()(
           if (data.success && data.token) {
             const { user, token } = data;
             
+             localStorage.setItem('token', token);
+            console.log('✅ Token saved to localStorage:', localStorage.getItem('token') ? 'SUCCESS' : 'FAILED');
             // Update state immediately
             set({ 
               user, 
@@ -46,6 +48,7 @@ export const useAuthStore = create<AuthState>()(
           } else if (err instanceof Error) {
             errorMessage = err.message;
           }
+          localStorage.removeItem('token');
           set({ 
             error: errorMessage, 
             isLoading: false,
@@ -65,6 +68,7 @@ export const useAuthStore = create<AuthState>()(
           
           if (data.success && data.token) {
             const { user, token } = data;
+            localStorage.setItem('token', token);
             set({ 
               user, 
               token, 
@@ -90,6 +94,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
+        localStorage.removeItem('token');
         set({ 
           user: null, 
           token: null, 
@@ -107,6 +112,14 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated
       }),
+       version: 1,
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          // Migrate from previous versions if needed
+          return persistedState;
+        }
+        return persistedState;
+      }
     }
   )
 );

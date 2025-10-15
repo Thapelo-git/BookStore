@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Book, BookCreateRequest, BookUpdateRequest, BookQueryParams } from '../types/book';
 import { bookService } from '../services/api';
-
+import { useAuthStore } from '../stores/authStore';
 interface UseBooksReturn {
   books: Book[];
   loading: boolean;
@@ -22,6 +22,7 @@ interface UseBooksReturn {
 }
 
 export const useBooks = (): UseBooksReturn => {
+  
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,23 +50,30 @@ export const useBooks = (): UseBooksReturn => {
   const loadBooks = useCallback(async (params?: BookQueryParams): Promise<void> => {
     if (!isMountedRef.current) return;
 
+     const currentToken = localStorage.getItem('token');
+     const zustandToken = useAuthStore.getState().token;
+    
+    console.log('🔐 useBooks auth check:', {
+      zustandToken: !!zustandToken,
+      localStorageToken: !!currentToken,
+      zustandAuthenticated: useAuthStore.getState().isAuthenticated
+    });
+    if (!currentToken) {
+      console.error('❌ Cannot load books: No authentication token');
+      setError('Please log in to access books');
+      setBooks([]);
+      return;
+    }
     setLoading(true);
     setError(null);
     
-    try {
-      const queryParams = params || filtersRef.current;
-      
-      console.log('📤 Loading books with params:', queryParams);
+     try {
+      const queryParams = { ...filtersRef.current, ...params };
+      console.log('📤 Loading books with token:', !!currentToken);
 
       const response = await bookService.getAll(queryParams);
       
       if (!isMountedRef.current) return;
-       const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('❌ Cannot load books: No authentication token');
-    setError('Please log in to access books');
-    return;
-  }
 
       if (response.data.success) {
         let booksData: Book[] = [];
@@ -85,7 +93,6 @@ export const useBooks = (): UseBooksReturn => {
           setPagination(response.data.pagination);
         }
 
-        // Update filters reference
         filtersRef.current = queryParams;
         setFilters(queryParams);
       } else {
@@ -96,7 +103,12 @@ export const useBooks = (): UseBooksReturn => {
       if (!isMountedRef.current) return;
       
       if (err.response?.status === 429) {
-        setError('Rate limited: Too many requests. Please wait a moment.');
+        setError('Too many requests. Please wait a moment before trying again.');
+      } else if (err.response?.status === 401) {
+        setError('Authentication failed. Please log in again.');
+        // Clear invalid token
+        // localStorage.removeItem('token');
+        // useAuthStore.getState().logout();
       } else {
         const errorMessage = err.response?.data?.message || err.message || 'An error occurred while loading books';
         setError(errorMessage);
@@ -106,7 +118,8 @@ export const useBooks = (): UseBooksReturn => {
         setLoading(false);
       }
     }
-  }, []); // NO dependencies - stable function
+  }, []);
+
 
   // Stable setFilters - only updates when actually changed
   const stableSetFilters = useCallback((newFilters: BookQueryParams) => {
@@ -199,18 +212,22 @@ export const useBooks = (): UseBooksReturn => {
   useEffect(() => {
     isMountedRef.current = true;
     
-    // Only load if not already loaded
-    if (!initialLoadDoneRef.current) {
+    const currentToken = localStorage.getItem('token');
+    console.log('🎯 useBooks init - Token exists:', !!currentToken);
+    
+    if (currentToken && !initialLoadDoneRef.current) {
       console.log('🎯 Initial books load');
       initialLoadDoneRef.current = true;
       loadBooks();
+    } else if (!currentToken) {
+      console.log('⏸️ Skipping books load - no token');
+      setBooks([]);
     }
 
     return () => {
       isMountedRef.current = false;
     };
-  }, []); // EMPTY dependency array - runs ONLY once
-
+  }, [loadBooks]);
   return {
     books,
     loading,
