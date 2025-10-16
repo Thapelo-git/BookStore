@@ -115,6 +115,18 @@ export const authService = {
     api.post('/auth/register', credentials),
   
   getProfile: () => api.get('/auth/profile'),
+  
+  updateProfile: (profileData: { name: string; email: string }) =>
+    api.put('/auth/profile', profileData),
+  
+  changePassword: (passwordData: { currentPassword: string; newPassword: string }) =>
+    api.put('/auth/change-password', passwordData),
+  
+  forgotPassword: (email: string) =>
+    api.post('/auth/forgot-password', { email }),
+  
+  resetPassword: (token: string, newPassword: string) =>
+    api.post('/auth/reset-password', { token, newPassword }),
 };
 
 export const bookService = {

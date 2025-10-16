@@ -7,8 +7,11 @@ import RegisterPage from './components/Register';
 import BookForm from './components/BookForm';
 import ProtectedRoute from './components/ProtectedRoute';
 
-import Home from './pages/Home'; // Make sure you have this
+import Home from './pages/Home'; 
 import BooksPage from './pages/BooksPage';
+import Profile from './components/Profile';
+import ChangePassword from './components/ChangePassword';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
   const { isAuthenticated  } = useAuthStore();
@@ -68,6 +71,13 @@ function App() {
                 </ProtectedRoute>
               }
             />
+                       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/" replace />} />
+            
+            {/* Protected routes */}
+            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePassword/></ProtectedRoute>} />
+
           </Routes>
         </main>
       </div>

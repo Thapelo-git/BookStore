@@ -14,6 +14,60 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
 
+        updateProfile: async (profileData: { name: string; email: string }) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.updateProfile(profileData);
+          const { data } = response;
+          
+          if (data.success) {
+            set({ 
+              user: data.data,
+              isLoading: false 
+            });
+          } else {
+            throw new Error(data.message || 'Failed to update profile');
+          }
+        } catch (err: unknown) {
+          let errorMessage = 'Failed to update profile';
+          if (isAxiosError(err)) {
+            errorMessage = err.response?.data?.message || err.message || errorMessage;
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+          set({ 
+            error: errorMessage, 
+            isLoading: false 
+          });
+          throw err;
+        }
+      },
+
+        changePassword: async (passwordData: { currentPassword: string; newPassword: string }) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.changePassword(passwordData);
+          const { data } = response;
+          
+          if (data.success) {
+            set({ isLoading: false });
+          } else {
+            throw new Error(data.message || 'Failed to change password');
+          }
+        } catch (err: unknown) {
+          let errorMessage = 'Failed to change password';
+          if (isAxiosError(err)) {
+            errorMessage = err.response?.data?.message || err.message || errorMessage;
+          } else if (err instanceof Error) {
+            errorMessage = err.message;
+          }
+          set({ 
+            error: errorMessage, 
+            isLoading: false 
+          });
+          throw err;
+        }
+      },
       login: async (credentials: LoginCredentials) => {
         set({ isLoading: true, error: null });
         try {
@@ -101,7 +155,10 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false 
         });
       },
+ 
 
+      
+    
       clearError: () => set({ error: null }),
     }),
     {
@@ -121,5 +178,8 @@ export const useAuthStore = create<AuthState>()(
         return persistedState;
       }
     }
+
+
+    
   )
 );

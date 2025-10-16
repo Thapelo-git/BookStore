@@ -76,4 +76,6 @@ export interface AuthState {
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+   updateProfile: (profileData: { name: string; email: string }) => Promise<void>;
+  changePassword: (passwordData: { currentPassword: string; newPassword: string }) => Promise<void>;
 }
