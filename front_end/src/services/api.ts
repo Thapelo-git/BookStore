@@ -125,8 +125,8 @@ export const authService = {
   forgotPassword: (email: string) =>
     api.post('/auth/forgot-password', { email }),
   
-  resetPassword: (token: string, newPassword: string) =>
-    api.post('/auth/reset-password', { token, newPassword }),
+  resetPassword: (token: string,email: string, newPassword: string) =>
+    api.post('/auth/reset-password', { token, newPassword,email }),
 };
 
 export const bookService = {

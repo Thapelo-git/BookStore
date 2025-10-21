@@ -12,6 +12,7 @@ import BooksPage from './pages/BooksPage';
 import Profile from './components/Profile';
 import ChangePassword from './components/ChangePassword';
 import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   const { isAuthenticated  } = useAuthStore();
@@ -40,6 +41,10 @@ function App() {
             <Route 
               path="/register" 
               element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/" replace />} 
+            />
+            <Route 
+              path="/reset-password" 
+              element={!isAuthenticated ? <ResetPassword/> : <Navigate to="/" replace />} 
             />
             <Route
               path="/books"
