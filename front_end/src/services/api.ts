@@ -15,7 +15,7 @@ const api = axios.create({
   // Add default params to prevent undefined values
   params: {
     page: 1,
-    limit: 9
+    limit: 4
   }
 });
 

@@ -66,12 +66,42 @@ const BookForm: React.FC = () => {
     }));
   };
 
+  const validateFormData = (data: BookCreateRequest): string[] => {
+  const errors: string[] = [];
+  
+  if (!data.title.trim()) errors.push('Title is required');
+  if (!data.author.trim()) errors.push('Author is required');
+  if (!data.isbn.trim()) errors.push('ISBN is required');
+  if (!data.publishedYear) errors.push('Published year is required');
+  
+  if (data.title.length > 200) errors.push('Title cannot exceed 200 characters');
+  if (data.author.length > 100) errors.push('Author cannot exceed 100 characters');
+  
+  const cleanIsbn = data.isbn.replace(/[-\s]/g, '');
+  if (!/^\d{10}$|^\d{13}$/.test(cleanIsbn)) {
+    errors.push('ISBN must be 10 or 13 digits');
+  }
+  
+  const currentYear = new Date().getFullYear();
+  if (data.publishedYear < 1000 || data.publishedYear > currentYear) {
+    errors.push(`Published year must be between 1000 and ${currentYear}`);
+  }
+  
+  return errors;
+};
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
+      const validationErrors = validateFormData(formData);
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(', '));
+      setLoading(false);
+      return;
+    }
       if (isEdit && id) {
         const updateData: BookUpdateRequest = { ...formData };
         await bookService.update(id, updateData);
