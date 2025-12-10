@@ -2,17 +2,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 import Navigation from './components/Navigation';
-import LoginPage from './components/Login';
-import RegisterPage from './components/Register';
-import BookForm from './components/BookForm';
-import ProtectedRoute from './components/ProtectedRoute';
-
-import Home from './pages/Home'; 
-import BooksPage from './pages/BooksPage';
-import Profile from './components/Profile';
-import ChangePassword from './components/ChangePassword';
-import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
+//import LoginPage from './components/Login';
+//import RegisterPage from './components/Register';
+//import BookForm from './components/BookForm';
+//import ProtectedRoute from './components/ProtectedRoute';
+import Index from './pages/Index';
+//import Home from './pages/Home'; 
+//import BooksPage from './pages/BooksPage';
+//import Profile from './components/Profile';
+//import ChangePassword from './components/ChangePassword';
+//import ForgotPassword from './components/ForgotPassword';
+//import ResetPassword from './components/ResetPassword';
 
 function App() {
   const { isAuthenticated  } = useAuthStore();
@@ -26,25 +26,29 @@ function App() {
           <Routes>
             <Route 
               path="/" 
+              element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
+            />
+            {/* <Route 
+              path="/" 
               element={
                 isAuthenticated ? (
                   <Home />
                 ) : (
-                  <Navigate to="/login" replace />
+                  <Navigate to="/" replace />
                 )
               } 
             />
             <Route 
-              path="/login" 
-              element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" replace />} 
+              path="/" 
+              element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
             />
             <Route 
               path="/register" 
-              element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/" replace />} 
+              element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
             />
             <Route 
               path="/reset-password" 
-              element={!isAuthenticated ? <ResetPassword/> : <Navigate to="/" replace />} 
+              element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
             />
             <Route
               path="/books"
@@ -76,12 +80,12 @@ function App() {
                 </ProtectedRoute>
               }
             />
-                       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/" replace />} />
+                       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/home" replace />} />
             
-            {/* Protected routes */}
-            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            
+            <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
-            <Route path="/change-password" element={<ProtectedRoute><ChangePassword/></ProtectedRoute>} />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePassword/></ProtectedRoute>} /> */}
 
           </Routes>
         </main>
