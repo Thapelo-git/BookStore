@@ -2,8 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 import Navigation from './components/Navigation';
-import LoginPage from './components/Login';
-import RegisterPage from './components/Register';
+
 import BookForm from './components/BookForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import Index from './pages/Index';
@@ -13,6 +12,7 @@ import Profile from './components/Profile';
 import ChangePassword from './components/ChangePassword';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import AuthPage from './pages/AuthPage';
 
 function App() {
   const { isAuthenticated  } = useAuthStore();
@@ -42,13 +42,13 @@ function App() {
               path="/" 
               element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
             />
-            <Route 
+            {/* <Route 
               path="/register" 
               element={!isAuthenticated ? <RegisterPage/> : <Navigate to="/home" replace />} 
-            />
+            /> */}
             <Route 
               path="/login" 
-              element={!isAuthenticated ? <LoginPage/> : <Navigate to="/home" replace />} 
+              element={!isAuthenticated ? <AuthPage/> : <Navigate to="/home" replace />} 
             />
             <Route 
               path="/reset-password" 

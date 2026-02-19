@@ -6,7 +6,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/Label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
 import { useAuth } from '../contexts/AuthContext';
-import { Toast } from '../components/ui/toast';
+//import { Toast } from '../components/ui/toast';
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -29,10 +29,11 @@ const AuthPage = () => {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    Toast({
-      title: 'Demo Mode',
-      description: 'Sign up is disabled in demo. Use the test accounts to log in.',
-    });
+    
+    // Toast({
+    //   title: 'Demo Mode',
+    //   description: 'Sign up is disabled in demo. Use the test accounts to log in.',
+    // });
   };
 
   return (

@@ -60,12 +60,12 @@ export function Header() {
             >
               Browse Books
             </Link>
-            <Link
+            {/* <Link
               to="/categories"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Categories
-            </Link>
+            </Link> */}
           </nav>
 
           {/* Actions */}
@@ -109,7 +109,7 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link to="/auth">
+              <Link to="/login">
                 <Button variant="default" size="sm">
                   Sign In
                 </Button>
