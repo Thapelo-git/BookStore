@@ -6,7 +6,7 @@ interface LocationState {
   from?: {
     pathname?: string;
   };
-}
+} 
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
