@@ -13,6 +13,8 @@ import ChangePassword from './components/ChangePassword';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import AuthPage from './pages/AuthPage';
+import BookDetailPage from './pages/BookDetailPage';
+import CartPage from './pages/CardPage';
 
 function App() {
   const { isAuthenticated  } = useAuthStore();
@@ -40,7 +42,7 @@ function App() {
             />
             <Route 
               path="/" 
-              element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
+              element={!isAuthenticated ? <Index/> : <Navigate to="/books" replace />} 
             />
             {/* <Route 
               path="/register" 
@@ -48,11 +50,11 @@ function App() {
             /> */}
             <Route 
               path="/login" 
-              element={!isAuthenticated ? <AuthPage/> : <Navigate to="/home" replace />} 
+              element={!isAuthenticated ? <AuthPage/> : <Navigate to="/books" replace />} 
             />
             <Route 
               path="/reset-password" 
-              element={!isAuthenticated ? <ResetPassword/> : <Navigate to="/home" replace />} 
+              element={!isAuthenticated ? <ResetPassword/> : <Navigate to="/books" replace />} 
             />
             <Route
               path="/books"
@@ -74,6 +76,20 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/cart" element={
+              <ProtectedRoute>
+                  <div className="container mx-auto px-4 py-8">
+                   <CartPage />
+                  </div>
+                </ProtectedRoute>
+              } />
+            <Route path="/book/:id" element={
+              <ProtectedRoute>
+                  <div className="container mx-auto px-4 py-8">
+                   <BookDetailPage/>
+                  </div>
+                </ProtectedRoute>
+              } />
             <Route
               path="/books/edit/:id"
               element={

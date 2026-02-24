@@ -132,6 +132,7 @@ const [email, setEmail] = useState('');
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          confirmPassword:formData.confirmPassword
         });
         navigate('/home');} catch (error: unknown) {
     let message = 'Registration failed';
@@ -147,7 +148,9 @@ const [email, setEmail] = useState('');
 const nameError = getFieldError('name', formData.name);
   const emailError = getFieldError('email', formData.email);
   const passwordErrorMsg = getFieldError('password', formData.password);
- 
+   const confirmPasswordError = touched.confirmPassword && !formData.confirmPassword ? 'Please confirm your password' : '';
+const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-hero">
@@ -193,6 +196,16 @@ const nameError = getFieldError('name', formData.name);
 
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
+                    {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                <div className="flex items-center">
+                  <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  {error}
+                </div>
+              </div>
+            )}
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <div className="relative">
@@ -304,7 +317,7 @@ const nameError = getFieldError('name', formData.name);
                       <Input
                          id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
                     value={formData.password}
@@ -314,9 +327,73 @@ const nameError = getFieldError('name', formData.name);
                       passwordErrorMsg ? 'border-red-300' : 'border-gray-300'
                     }`}
                       />
+                      <button
+    type="button"
+    onClick={() => setShowPassword(prev => !prev)}
+    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+  >
+    {showPassword ? (
+      // Eye Off Icon
+      <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7 0-1.04.47-2.14 1.32-3.17M6.7 6.7A9.956 9.956 0 0112 5c5 0 9 4 9 7 0 1.43-.82 2.95-2.22 4.18M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ) : (
+      // Eye Icon
+      <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+    )}
+  </button>
                     </div>
                      {passwordErrorMsg && (
                   <p className="mt-1 text-sm text-red-600">{passwordErrorMsg}</p>
+                )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Confirm Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                         id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                   
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('confirmPassword')}
+                    className={`appearance-none block w-full px-3 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                      confirmPasswordError ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                      />
+                      <button
+    type="button"
+    onClick={() => setShowConfirmPassword(prev => !prev)}
+    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+  >
+    {showConfirmPassword ? (
+      // Eye Off Icon
+      <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7 0-1.04.47-2.14 1.32-3.17M6.7 6.7A9.956 9.956 0 0112 5c5 0 9 4 9 7 0 1.43-.82 2.95-2.22 4.18M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ) : (
+      // Eye Icon
+      <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+    )}
+  </button>
+                    </div>
+                     {confirmPasswordError && (
+                  <p className="mt-1 text-sm text-red-600">{confirmPasswordError}</p>
                 )}
                   </div>
                   <Button type="submit" variant="hero" className="w-full">

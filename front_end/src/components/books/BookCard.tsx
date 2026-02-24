@@ -34,7 +34,7 @@ export function BookCard({ book, className }: BookCardProps) {
       </div>
 
       {/* Book Cover */}
-      <Link to={`/book/${book.id}`} className="block overflow-hidden">
+      <Link to={`/book/${book._id}`} className="block overflow-hidden">
         <div className="aspect-[3/4] overflow-hidden bg-muted">
           <img
             src={book.coverImage}
@@ -46,7 +46,7 @@ export function BookCard({ book, className }: BookCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        <Link to={`/book/${book.id}`}>
+        <Link to={`/book/${book._id}`}>
           <h3 className="font-display text-lg font-semibold leading-tight text-foreground line-clamp-2 transition-colors hover:text-primary">
             {book.title}
           </h3>
@@ -64,11 +64,11 @@ export function BookCard({ book, className }: BookCardProps) {
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="font-display text-lg font-bold text-foreground">
-              ${book.price.toFixed(2)}
+              ${book.price}
             </span>
             {book.originalPrice && (
               <span className="text-sm text-muted-foreground line-through">
-                ${book.originalPrice.toFixed(2)}
+                ${book.originalPrice}
               </span>
             )}
           </div>

@@ -1,4 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 40 33% 97%;
+    --foreground: 20 14% 15%;
+
+    --card: 40 33% 99%;
+    --card-foreground: 20 14% 15%;
+
+    --popover: 40 33% 99%;
+    --popover-foreground: 20 14% 15%;
+
+    --primary: 348 58% 28%;
+    --primary-foreground: 40 33% 97%;
+
+    --secondary: 152 32% 28%;
+    --secondary-foreground: 40 33% 97%;
+
+    --muted: 40 20% 92%;
+    --muted-foreground: 20 10% 45%;
+
+    --accent: 32 80% 55%;
+    --accent-foreground: 20 14% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 40 33% 97%;
+
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 348 58% 28%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 40 33% 96%;
+    --sidebar-foreground: 20 14% 15%;
+    --sidebar-primary: 348 58% 28%;
+    --sidebar-primary-foreground: 40 33% 97%;
+    --sidebar-accent: 40 20% 92%;
+    --sidebar-accent-foreground: 20 14% 15%;
+    --sidebar-border: 40 20% 88%;
+    --sidebar-ring: 348 58% 28%;
+
+    /* Custom tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(40 33% 97%) 0%, hsl(40 30% 93%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(40 33% 99%) 0%, hsl(40 30% 96%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(348 58% 28%) 0%, hsl(348 50% 35%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(152 32% 28%) 0%, hsl(152 28% 35%) 100%);
+    
+    --shadow-soft: 0 4px 20px -4px hsl(20 14% 15% / 0.08);
+    --shadow-card: 0 8px 30px -8px hsl(20 14% 15% / 0.12);
+    --shadow-elevated: 0 20px 50px -15px hsl(20 14% 15% / 0.2);
+    --shadow-glow: 0 0 40px hsl(348 58% 28% / 0.15);
+
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Source Sans 3', sans-serif;
+  }
+
+  .dark {
+    --background: 20 14% 10%;
+    --foreground: 40 33% 95%;
+
+    --card: 20 14% 12%;
+    --card-foreground: 40 33% 95%;
+
+    --popover: 20 14% 12%;
+    --popover-foreground: 40 33% 95%;
+
+    --primary: 348 50% 45%;
+    --primary-foreground: 40 33% 97%;
+
+    --secondary: 152 28% 40%;
+    --secondary-foreground: 40 33% 97%;
+
+    --muted: 20 14% 18%;
+    --muted-foreground: 40 20% 60%;
+
+    --accent: 32 70% 50%;
+    --accent-foreground: 20 14% 10%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 40 33% 97%;
+
+    --border: 20 14% 20%;
+    --input: 20 14% 20%;
+    --ring: 348 50% 45%;
+
+    --sidebar-background: 20 14% 8%;
+    --sidebar-foreground: 40 33% 95%;
+    --sidebar-primary: 348 50% 45%;
+    --sidebar-primary-foreground: 40 33% 97%;
+    --sidebar-accent: 20 14% 18%;
+    --sidebar-accent-foreground: 40 33% 95%;
+    --sidebar-border: 20 14% 20%;
+    --sidebar-ring: 348 50% 45%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(20 14% 10%) 0%, hsl(20 14% 14%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(20 14% 12%) 0%, hsl(20 14% 15%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .bg-hero {
+    background: var(--gradient-hero);
+  }
+
+  .bg-card-gradient {
+    background: var(--gradient-card);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from { 
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to { 
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

@@ -34,11 +34,11 @@ export function BookCard({ book, className }: BookCardProps) {
       </div>
 
       {/* Book Cover */}
-      <Link to={`/book/${book.id}`} className="block overflow-hidden">
+      <Link to={`/book/${book._id}`} className="block overflow-hidden">
         <div className="aspect-[3/4] overflow-hidden bg-muted">
           <img
             src={book.coverImage}
-            alt={`Cover of ${book.title}`}
+            alt={`Cover of ${book.title} `}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
@@ -46,9 +46,9 @@ export function BookCard({ book, className }: BookCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        <Link to={`/book/${book.id}`}>
+        <Link to={`/book/${book._id}`}>
           <h3 className="font-display text-lg font-semibold leading-tight text-foreground line-clamp-2 transition-colors hover:text-primary">
-            {book.title}
+            {book.title} {book._id}
           </h3>
         </Link>
         <p className="mt-1 text-sm text-muted-foreground">{book.author}</p>

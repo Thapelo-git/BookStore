@@ -3,7 +3,7 @@ import { Book, CartItem } from '../types/book';
 import { toast } from '../hooks/use-toast';
 
 interface CartContextType {
-  items: CartItem[];
+  items: CartItem[]; 
   addToCart: (book: Book, quantity?: number) => void;
   removeFromCart: (bookId: string) => void;
   updateQuantity: (bookId: string, quantity: number) => void;
@@ -19,10 +19,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = useCallback((book: Book, quantity = 1) => {
     setItems((prev) => {
-      const existingItem = prev.find((item) => item.book.id === book.id);
+      const existingItem = prev.find((item) => item.book._id === book._id);
       if (existingItem) {
         return prev.map((item) =>
-          item.book.id === book.id
+          item.book._id === book._id
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -36,7 +36,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const removeFromCart = useCallback((bookId: string) => {
-    setItems((prev) => prev.filter((item) => item.book.id !== bookId));
+    setItems((prev) => prev.filter((item) => item.book._id !== bookId));
     toast({
       title: 'Removed from cart',
       description: 'Item has been removed from your cart.',
@@ -50,7 +50,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.book.id === bookId ? { ...item, quantity } : item
+        item.book._id === bookId ? { ...item, quantity } : item
       )
     );
   }, [removeFromCart]);
