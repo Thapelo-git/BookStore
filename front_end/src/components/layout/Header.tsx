@@ -3,7 +3,7 @@ import { ShoppingCart, User, Search, BookOpen, Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { useCart } from '../../contexts/CartContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuthStore } from '../../stores/authStore'
 import { useState } from 'react';
 import {
   DropdownMenu,
@@ -15,7 +15,7 @@ import {
 
 export function Header() {
   const { itemCount } = useCart();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getDashboardLink = () => {

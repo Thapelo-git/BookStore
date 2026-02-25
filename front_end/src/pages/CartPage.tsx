@@ -4,7 +4,14 @@ import { Layout } from '../components/layout/Layout';
 import { Button } from '../components/ui/button';
 import { Separator } from '../components/ui/separator';
 import { useCart } from '../contexts/CartContext';
+import { orderService } from '../services/api';
+import { Book } from '../types/book';
 
+//import { useBooks } from '../hooks/useBooks';
+export interface CartItem {
+  book: Book;
+  quantity: number;
+}
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, total, clearCart } = useCart();
 
@@ -30,7 +37,24 @@ const CartPage = () => {
       </Layout>
     );
   }
+const handleCheckout = async () => {
+  try {
+    await orderService.create({
+      items: items,
+      shippingAddress: {
+        street: '123 Main',
+        city: 'Johannesburg',
+        state: 'Gauteng',
+        zipCode: '2000',
+        country: 'South Africa'
+      }
+    });
 
+    clearCart();
+  } catch (error) {
+    console.error(error);
+  }
+};
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -146,7 +170,7 @@ const CartPage = () => {
                   ${(total + (total >= 35 ? 0 : 4.99) + total * 0.08).toFixed(2)}
                 </span>
               </div>
-              <Button variant="hero" size="lg" className="mt-6 w-full">
+       <Button onClick={handleCheckout} variant="hero" size="lg" className="mt-6 w-full">
                 Proceed to Checkout
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

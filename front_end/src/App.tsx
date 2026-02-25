@@ -1,12 +1,12 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
-import Navigation from './components/Navigation';
+//import Navigation from './components/Navigation';
 
 import BookForm from './components/BookForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import Index from './pages/Index';
-import Home from './pages/Home'; 
+//import Home from './pages/Home'; 
 import BooksPage from './pages/BooksPage';
 import Profile from './components/Profile';
 import ChangePassword from './components/ChangePassword';
@@ -15,6 +15,9 @@ import ResetPassword from './components/ResetPassword';
 import AuthPage from './pages/AuthPage';
 import BookDetailPage from './pages/BookDetailPage';
 import CartPage from './pages/CardPage';
+import ClientAccount from './pages/ClientAccount';
+import MerchantDashboard from './pages/MerchantDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   const { isAuthenticated  } = useAuthStore();
@@ -22,7 +25,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        <Navigation />
+        {/* <Navigation /> */}
         
         <main>
           <Routes>
@@ -34,7 +37,7 @@ function App() {
               path="/" 
               element={
                 isAuthenticated ? (
-                  <Home />
+                 <ClientAccount/>
                 ) : (
                   <Navigate to="/" replace />
                 )
@@ -50,7 +53,7 @@ function App() {
             /> */}
             <Route 
               path="/login" 
-              element={!isAuthenticated ? <AuthPage/> : <Navigate to="/books" replace />} 
+              element={!isAuthenticated ? <AuthPage/> : <Navigate to="/home" replace />} 
             />
             <Route 
               path="/reset-password" 
@@ -101,9 +104,33 @@ function App() {
               }
             />
                        <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/home" replace />} />
-            
-            
-            <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route
+  path="/home"
+  element={
+    <ProtectedRoute allowedRoles={['client']}>
+      <ClientAccount />
+    </ProtectedRoute>
+  }
+/>
+
+           <Route
+  path="/merchant"
+  element={
+    <ProtectedRoute allowedRoles={['merchant']}>
+      <MerchantDashboard />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/admin"
+  element={
+    <ProtectedRoute allowedRoles={['admin']}>
+      <AdminDashboard/>
+    </ProtectedRoute>
+  }
+/>
+
+            <Route path="/home" element={<ProtectedRoute><ClientAccount/></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePassword/></ProtectedRoute>} />
 

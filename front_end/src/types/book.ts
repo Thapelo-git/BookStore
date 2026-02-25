@@ -54,7 +54,7 @@ export interface Book {
   featured?: boolean;
   bestseller?: boolean;
 }
-export interface BookUpdateRequest extends Partial<BookCreateRequest> {}
+
 
 export interface CartItem {
   book: Book;
@@ -63,21 +63,22 @@ export interface CartItem {
 
 export interface Category {
   id?: string;
-  name?: string;
+  name: string;
   slug?: string;
   icon?: string;
   bookCount?: number;
 }
-
 export interface Order {
-  id?: string;
-  userId?: string;
-  items?: CartItem[];
-  total?: number;
-  status?: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  createdAt?: string;
-  shippingAddress?: Address;
+  _id: string;
+  user: string;
+  items: CartItem[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  createdAt: string;
+  shippingAddress: Address;
 }
+
+
 
 export interface Address {
   street?: string;
@@ -96,4 +97,6 @@ export interface BookQueryParams {
   sortBy?: string;
   order?: 'asc' | 'desc';
 }
-
+export interface BookUpdateRequest extends Partial<BookCreateRequest> {
+  id: string;
+}

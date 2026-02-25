@@ -1,4 +1,4 @@
-
+import React ,{useState} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Layout } from '../components/layout/Layout';
@@ -6,14 +6,15 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
 import { useCart } from '../contexts/CartContext';
-import { useState } from 'react';
+
 import { useBooks } from '../hooks/useBooks';
 
 const BookDetailPage = () => {
+
   const { id } = useParams();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const { books, loading, error } = useBooks();
+  const { books, loading } = useBooks();
 
   const book = books.find((b) => b._id === id);
 

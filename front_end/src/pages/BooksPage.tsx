@@ -23,7 +23,7 @@ const BooksPage: React.FC = () => {
   } = useBooks();
 
   const handleEdit = (book: Book) => {
-    window.location.href = `/books/edit/${book.id}`;
+    window.location.href = `/books/edit/${book._id}`;
   };
 
   const handleDelete = async (id: string) => {

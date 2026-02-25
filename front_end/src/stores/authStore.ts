@@ -91,7 +91,7 @@ export const useAuthStore = create<AuthState>()(
             });
             
             console.log('✅ Login successful - state updated');
-            return;
+            return user;
           } else {
             throw new Error(data.message || 'Login failed');
           }

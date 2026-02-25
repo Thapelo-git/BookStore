@@ -1,5 +1,5 @@
 import { useState ,useEffect} from 'react';
-import { useNavigate ,useLocation} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { BookOpen, Mail, Lock, User } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -9,18 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs'
 import { useAuthStore } from '../stores/authStore';
 import { isAxiosError } from 'axios';
 
-interface LocationState {
-  from?: {
-    pathname?: string;
-  };
-}
 const AuthPage = () => {
-   const { login,register, isLoading, error, clearError, isAuthenticated } = useAuthStore();
+   const { login,register, isLoading, error, clearError, isAuthenticated,user } = useAuthStore();
   const [formData, setFormData] = useState({
       name: '',
       email: '',
       password: '',
       confirmPassword: '',
+      role:''
     });
     const [passwordError, setPasswordError] = useState('');
     const [touched, setTouched] = useState({
@@ -30,11 +26,26 @@ const AuthPage = () => {
       confirmPassword: false,
     });
     const navigate = useNavigate();
-     useEffect(() => {
-        if (isAuthenticated) {
-          navigate('/home');
-        }
-      }, [isAuthenticated, navigate]);
+ useEffect(() => {
+  if (!isAuthenticated || !user) return;
+
+  const role = user.role;
+
+  if (role === 'merchant') {
+    navigate('/merchant', { replace: true });
+  }
+
+  else if (role === 'admin') {
+    navigate('/admin', { replace: true });
+  }
+
+  else if (role === 'client') {
+    navigate('/home', { replace: true });
+  }
+
+}, [isAuthenticated, user]);
+
+
     
       useEffect(() => {
         clearError();
@@ -45,7 +56,7 @@ const AuthPage = () => {
         setTouched(prev => ({ ...prev, [field]: true }));
       };
     
-      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({
           ...formData,
           [e.target.name]: e.target.value,
@@ -83,19 +94,6 @@ const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
  
-  
-  const location = useLocation();
-
-   const state = location.state as LocationState | null;
-  const from = state?.from?.pathname || "/";
-  
-    useEffect(() => {
-      if (isAuthenticated) {
-        console.log('User authenticated, navigating to:', from);
-        navigate(from, { replace: true });
-      }
-    }, [isAuthenticated, navigate, from]);
-  
     useEffect(() => {
       clearError();
     }, [email, password, clearError]);
@@ -132,9 +130,12 @@ const [email, setEmail] = useState('');
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          confirmPassword:formData.confirmPassword
+          confirmPassword:formData.confirmPassword,
+          role:formData.role,
         });
-        navigate('/home');} catch (error: unknown) {
+        
+      } 
+        catch (error: unknown) {
     let message = 'Registration failed';
     if (isAxiosError(error)) {
       message = error.response?.data?.message || error.message || message;
@@ -395,7 +396,22 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
                      {confirmPasswordError && (
                   <p className="mt-1 text-sm text-red-600">{confirmPasswordError}</p>
                 )}
-                  </div>
+                  </div><div className="space-y-2">
+  <Label htmlFor="role">Role</Label>
+  <select
+    id="role"
+    name="role"
+    
+    value={formData.role}
+    onChange={handleChange}
+    className="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+  >
+    <option value="client">Client</option>
+    <option value="merchant">Merchant</option>
+    <option value="admin">Admin</option>
+  </select>
+</div>
+
                   <Button type="submit" variant="hero" className="w-full">
                     Create Account
                   </Button>

@@ -4,7 +4,7 @@ import {
   RegisterCredentials, 
   BookCreateRequest, 
   BookUpdateRequest,
-  BookQueryParams
+  BookQueryParams,CartItem,Address
 } from '../types/book';
 
 const API_BASE_URL = 'http://localhost:5002/api';
@@ -172,5 +172,21 @@ export const bookService = {
   //     params: { search: query, ...params } 
   //   }),
 };
+export const orderService = {
+  create: (orderData: {
+    items: CartItem[];
+    shippingAddress: Address;
+  }) => api.post('/orders', orderData),
+
+  getMyOrders: () => api.get('/orders/my'),
+
+  getById: (id: string) => api.get(`/orders/${id}`),
+
+  updateStatus: (id: string, status: string) =>
+    api.put(`/orders/${id}`, { status }),
+
+  delete: (id: string) => api.delete(`/orders/${id}`),
+};
+
 
 export default api;

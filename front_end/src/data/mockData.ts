@@ -148,7 +148,7 @@ export const books: Book[] = [
     isbn: '978-1501161933',
     pages: 400,
     language: 'English',
-  },
+  }, 
   {
     id: '8',
     title: 'Sapiens: A Brief History of Humankind',
