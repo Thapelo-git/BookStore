@@ -12,11 +12,7 @@ const API_BASE_URL = 'http://localhost:5002/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
-  // Add default params to prevent undefined values
-  params: {
-    page: 1,
-    limit: 4
-  }
+  
 });
 
 // Request counter for debugging

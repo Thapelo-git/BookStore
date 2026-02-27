@@ -18,10 +18,24 @@ import CartPage from './pages/CardPage';
 import ClientAccount from './pages/ClientAccount';
 import MerchantDashboard from './pages/MerchantDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+// RoleRedirect component to send authenticated users to their dashboard based on role
+function RoleRedirect() {
+  const { user } = useAuthStore();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) return;
+    if (user.role === 'client') navigate('/client', { replace: true });
+    else if (user.role === 'merchant') navigate('/merchant', { replace: true });
+    else if (user.role === 'admin') navigate('/admin', { replace: true });
+    else navigate('/home', { replace: true });
+  }, [user, navigate]);
+  return null;
+}
 function App() {
-  const { isAuthenticated  } = useAuthStore();
-
+  const { isAuthenticated } = useAuthStore();
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
@@ -33,28 +47,15 @@ function App() {
               path="/" 
               element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
             />
-            <Route 
-              path="/" 
-              element={
-                isAuthenticated ? (
-                 <ClientAccount/>
-                ) : (
-                  <Navigate to="/" replace />
-                )
-              } 
-            />
-            <Route 
-              path="/" 
-              element={!isAuthenticated ? <Index/> : <Navigate to="/books" replace />} 
-            />
             {/* <Route 
               path="/register" 
               element={!isAuthenticated ? <RegisterPage/> : <Navigate to="/home" replace />} 
             /> */}
             <Route 
               path="/login" 
-              element={!isAuthenticated ? <AuthPage/> : <Navigate to="/home" replace />} 
+              element={!isAuthenticated ? <AuthPage/> : <RoleRedirect />} 
             />
+  
             <Route 
               path="/reset-password" 
               element={!isAuthenticated ? <ResetPassword/> : <Navigate to="/books" replace />} 
@@ -105,7 +106,7 @@ function App() {
             />
                        <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/home" replace />} />
             <Route
-  path="/home"
+  path="/client"
   element={
     <ProtectedRoute allowedRoles={['client']}>
       <ClientAccount />
@@ -130,7 +131,6 @@ function App() {
   }
 />
 
-            <Route path="/home" element={<ProtectedRoute><ClientAccount/></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePassword/></ProtectedRoute>} />
 

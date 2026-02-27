@@ -12,7 +12,7 @@ const BookForm: React.FC = () => {
     title: '',
     author: '',
     isbn: '',
-    publishedYear: new Date().getFullYear(),
+    publishedDate: new Date().getFullYear(),
     available: true,
     genre: '',
     description: ''
@@ -37,7 +37,7 @@ const BookForm: React.FC = () => {
           title: book.title,
           author: book.author,
           isbn: book.isbn,
-          publishedYear: book.publishedYear,
+          publishedDate: book.publishedDate,
           available: book.available,
           genre: book.genre || '',
           description: book.description || ''

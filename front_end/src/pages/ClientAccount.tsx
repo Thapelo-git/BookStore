@@ -19,11 +19,13 @@ import { Separator } from '../components/ui/separator';
 import { useAuthStore } from '../stores/authStore';
 import { useBooks } from '../hooks/useBooks';
 import { Layout } from '../components/layout/Layout';
-import {useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { orderService } from '../services/api';
 import { Order } from '../types/book'; 
 
 //import { Link, useLocation } from 'react-router-dom';
+
+
 const ClientAccount = () => {
    
   const { user, logout} = useAuthStore();
@@ -74,6 +76,34 @@ const [orders, setOrders] = useState<Order[]>([]);
     }
   };
 
+// HeartToggle component for wishlist icon
+// function HeartToggle() {
+//   const [liked, setLiked] = useState(false);
+//   useEffect(() => {
+//     try {
+//       const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+//       setLiked(Array.isArray(wishlist) && wishlist.length > 0);
+//     } catch {}
+//   }, []);
+//   const handleToggle = () => {
+//     let wishlist = [];
+//     try {
+//       wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+//     } catch {}
+//     if (liked) {
+//       wishlist = [];
+//     } else {
+//       wishlist = ['dummy'];
+//     }
+//     localStorage.setItem('wishlist', JSON.stringify(wishlist));
+//     setLiked(!liked);
+//   };
+//   return (
+//     <button onClick={handleToggle} aria-label="Toggle wishlist" type="button">
+//       <Heart className={`h-6 w-6 ${liked ? 'text-red-500 fill-red-500' : 'text-accent'}`} />
+//     </button>
+//   );
+// }
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -103,13 +133,13 @@ const [orders, setOrders] = useState<Order[]>([]);
                     <User className="h-4 w-4" />
                     Profile
                   </a>
-                  <a
-                    href="#"
+                  <Link
+                    to="/cart"
                     className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted"
                   >
                     <Package className="h-4 w-4" />
                     Orders
-                  </a>
+                  </Link>
                   <a
                     href="#"
                     className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted"
@@ -162,7 +192,7 @@ const [orders, setOrders] = useState<Order[]>([]);
                     <Package className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">12</p>
+                    <p className="text-2xl font-bold">{orders.length}</p>
                     <p className="text-sm text-muted-foreground">Total Orders</p>
                   </div>
                 </CardContent>
@@ -173,7 +203,14 @@ const [orders, setOrders] = useState<Order[]>([]);
                     <BookOpen className="h-6 w-6 text-secondary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">28</p>
+                    <p className="text-2xl font-bold">{(() => {
+                      // Count total books bought
+                      let count = 0;
+                      orders.forEach(order => {
+                        count += order.items.length;
+                      });
+                      return count;
+                    })()}</p>
                     <p className="text-sm text-muted-foreground">Books Bought</p>
                   </div>
                 </CardContent>
@@ -181,24 +218,37 @@ const [orders, setOrders] = useState<Order[]>([]);
               <Card className="shadow-soft">
                 <CardContent className="flex items-center gap-4 p-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
-                    <Heart className="h-6 w-6 text-accent" />
+                    {/* Heart icon toggle */}
+                    {/* <HeartToggle /> */}
                   </div>
-                  <div>
-                    <p className="text-2xl font-bold">8</p>
+                  {/* <div>
+                    <p className="text-2xl font-bold">{(() => {
+                      // Wishlist count from localStorage (assume 'wishlist' is an array of book IDs)
+                      let wishlistCount = 0;
+                      try {
+                        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                        if (Array.isArray(wishlist)) wishlistCount = wishlist.length;
+                      } catch {}
+                      return wishlistCount;
+                    })()}</p>
                     <p className="text-sm text-muted-foreground">Wishlist Items</p>
-                  </div>
+                  </div> */}
                 </CardContent>
               </Card>
+        
+            
             </div>
 
             {/* Recent Orders */}
             <Card className="shadow-soft">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Recent Orders</CardTitle>
-                <Button variant="outline" size="sm">
-                  View All Orders
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Link to="/cart">
+                  <Button variant="outline" size="sm">
+                    View All Orders
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -212,7 +262,6 @@ const [orders, setOrders] = useState<Order[]>([]);
                           <span className="font-semibold">{order._id}</span>
                           <span className="ml-3 text-sm text-muted-foreground">
                             {new Date(order.createdAt).toLocaleDateString()}
-
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -232,23 +281,20 @@ const [orders, setOrders] = useState<Order[]>([]);
                       </div>
                       <div className="flex items-center gap-2">
                         {order.items.map((item) => (
-                        
                             <img
-                             key={item.book._id}
-              src={item.book.coverImage}
-        alt={item.book.title}
-      
-                            className="h-16 w-12 rounded object-cover"
-                          />
+                              key={item.book._id}
+                              src={item.book.coverImage}
+                              alt={item.book.title}
+                              className="h-16 w-12 rounded object-cover"
+                            />
                         ))}
                         <div className="ml-auto text-right">
-                         <p className="font-display text-lg font-bold">
-  R{order.total.toFixed(2)}
-</p>
-<p className="text-sm text-muted-foreground">
-  {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
-</p>
-
+                          <p className="font-display text-lg font-bold">
+                            R{order.total.toFixed(2)}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -264,7 +310,7 @@ const [orders, setOrders] = useState<Order[]>([]);
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  {books.slice(4, 8).map((book) => (
+                  {books.slice(0, 4).map(book => (
                     <Link
                       key={book._id}
                       to={`/book/${book._id}`}

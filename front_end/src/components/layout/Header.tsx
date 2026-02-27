@@ -26,7 +26,7 @@ export function Header() {
       case 'merchant':
         return '/merchant';
       default:
-        return '/account';
+        return '/client';
     }
   };
 

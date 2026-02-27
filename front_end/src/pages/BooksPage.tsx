@@ -1,36 +1,35 @@
 import { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, Grid, List } from 'lucide-react';
+import { Search,  Grid, List } from 'lucide-react';
 import { Layout } from '../components/layout/Layout';
 import { BookCard } from '../components/books/BookCard';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Link } from 'react-router-dom';
-import BookList from '../components/BookList';
+
 import { useBooks } from '../hooks/useBooks';
-import { Book, BookQueryParams } from '../types/book';
+//import { Book,  } from '../types/book';
 
 const BooksPage: React.FC = () => {
   const { 
     books, 
-    loading, 
-    error, 
-    pagination, 
-    filters, 
-    deleteBook, 
-    loadBooks, 
+    // loading, 
+    // error, 
+    // pagination, 
+    // filters, 
+    // deleteBook, 
+    // loadBooks, 
     // setFilters 
   } = useBooks();
 
-  const handleEdit = (book: Book) => {
-    window.location.href = `/books/edit/${book._id}`;
-  };
+  // const handleEdit = (book: Book) => {
+  //   window.location.href = `/books/edit/${book._id}`;
+  // };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this book?')) {
-      await deleteBook(id);
-    }
-  };
+  // const handleDelete = async (id: string) => {
+  //   if (window.confirm('Are you sure you want to delete this book?')) {
+  //     await deleteBook(id);
+  //   }
+  // };
 
   // const handleFiltersChange = (newFilters: BookQueryParams) => {
   //   setFilters(newFilters);

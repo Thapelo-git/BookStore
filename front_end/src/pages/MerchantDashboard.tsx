@@ -1,4 +1,4 @@
-import { useState } from 'react';
+//import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -16,21 +16,19 @@ import {
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { useAuthStore } from '../stores/authStore'
-//import { books as initialBooks } from '../data/mockData';
+import { useBooks } from '../hooks/useBooks';
 import { AddBookDialog } from '../components/merchant/AddBookDialog';
 import { Book } from '../types/book';
 
 const MerchantDashboard = () => {
    const { user,  logout } = useAuthStore();
- const [merchantBookList, setMerchantBookList] = useState<Book[]>([]);
-
+  const { books } = useBooks();
+  // Only show books listed by this merchant
+  const merchantBooks = books.filter(book => book.merchantId === user?._id);
 
   const handleAddBook = (newBook: Book) => {
-    setMerchantBookList((prev) => [newBook, ...prev]);
+    // Optionally, you can refetch books or update state if needed
   };
-
-  // Use state-managed list
-  const merchantBooks = merchantBookList;
 
   const stats = [
     {
@@ -132,7 +130,7 @@ const MerchantDashboard = () => {
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background px-6">
           <h1 className="font-display text-xl font-bold">Merchant Dashboard</h1>
           <div className="flex items-center gap-3">
-  author: string;
+  
             <AddBookDialog onAddBook={handleAddBook} merchantId="m1" merchantName={user?.name || 'Merchant'}>
               <Button variant="default" size="sm">
                 <Plus className="mr-2 h-4 w-4" />

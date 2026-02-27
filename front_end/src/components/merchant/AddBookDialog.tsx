@@ -25,7 +25,7 @@ import { BookCreateRequest, BookUpdateRequest } from '../../types/book';
 import { bookService } from '../../services/api';
 import { AxiosError } from "axios";
 interface AddBookDialogProps {
-  mode: 'create' | 'edit';
+  mode?: 'create' | 'edit';
   initialData?: BookUpdateRequest;
 
   onAddBook: (book: Book) => void;
@@ -41,7 +41,7 @@ const categories: Category[] = [
   { id: '4', name: 'Technology', slug: 'technology', icon: '💻' },
 ];
 export function AddBookDialog({
-  mode,
+  mode="create",
   initialData,
   onAddBook,
   merchantId,
@@ -118,6 +118,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       const response = await bookService.create(payload);
       onAddBook(response.data.data);
       toast.success('Book created successfully');
+      console.log("Submitting form...");
     } else if (mode === 'edit' && initialData?.id) {
       const updatePayload: BookUpdateRequest = {
         id: initialData.id,

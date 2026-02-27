@@ -31,19 +31,16 @@ const AuthPage = () => {
 
   const role = user.role;
 
+
   if (role === 'merchant') {
     navigate('/merchant', { replace: true });
-  }
-
-  else if (role === 'admin') {
+  } else if (role === 'admin') {
     navigate('/admin', { replace: true });
+  } else if (role === 'client') {
+    navigate('/client', { replace: true });
   }
 
-  else if (role === 'client') {
-    navigate('/home', { replace: true });
-  }
-
-}, [isAuthenticated, user]);
+}, [isAuthenticated, user,navigate]);
 
 
     
