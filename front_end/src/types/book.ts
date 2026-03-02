@@ -18,12 +18,18 @@ export interface BookCreateRequest {
   coverImage: string;
   category: string;
   stock: number;
+  rating:number;
+  reviewCount:number;
   publishedDate: string;
   isbn: string;
   pages: number;
   language: string;
   featured?: boolean;
   bestseller?: boolean;
+  merchantId:string;
+  merchantName:string;
+  createdBy:string;
+  
 }
 export interface User {
   id: string;
@@ -54,7 +60,9 @@ export interface Book {
   featured?: boolean;
   bestseller?: boolean;
 }
-
+export interface OrderItemRequest {
+  book: string;   // only ID
+  quantity: number;}
 
 export interface CartItem {
   book: Book;

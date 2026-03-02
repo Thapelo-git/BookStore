@@ -4,7 +4,7 @@ import {
   RegisterCredentials, 
   BookCreateRequest, 
   BookUpdateRequest,
-  BookQueryParams,CartItem,Address
+  BookQueryParams,CartItem,Address,OrderItemRequest 
 } from '../types/book';
 
 const API_BASE_URL = 'http://localhost:5002/api';
@@ -14,7 +14,7 @@ const api = axios.create({
   timeout: 15000,
   
 });
-
+ 
 // Request counter for debugging
 let requestCount = 0;
 
@@ -168,11 +168,12 @@ export const bookService = {
   //     params: { search: query, ...params } 
   //   }),
 };
+
 export const orderService = {
   create: (orderData: {
-    items: CartItem[];
-    shippingAddress: Address;
-  }) => api.post('/orders', orderData),
+  items: OrderItemRequest[];
+  shippingAddress: Address;
+}) => api.post('/orders', orderData),
 
   getMyOrders: () => api.get('/orders/my'),
 

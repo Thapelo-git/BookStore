@@ -30,7 +30,7 @@ function RoleRedirect() {
     if (user.role === 'client') navigate('/client', { replace: true });
     else if (user.role === 'merchant') navigate('/merchant', { replace: true });
     else if (user.role === 'admin') navigate('/admin', { replace: true });
-    else navigate('/home', { replace: true });
+    else navigate('/login', { replace: true });
   }, [user, navigate]);
   return null;
 }
@@ -45,7 +45,7 @@ function App() {
           <Routes>
             <Route 
               path="/" 
-              element={!isAuthenticated ? <Index/> : <Navigate to="/home" replace />} 
+              element={!isAuthenticated ? <Index/> : <RoleRedirect />} 
             />
             {/* <Route 
               path="/register" 
@@ -104,7 +104,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-                       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/home" replace />} />
+                       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/login" replace />} />
             <Route
   path="/client"
   element={

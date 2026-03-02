@@ -12,6 +12,8 @@ export interface CartItem {
   book: Book;
   quantity: number;
 }
+
+
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, total, clearCart } = useCart();
 
@@ -40,7 +42,10 @@ const CartPage = () => {
 const handleCheckout = async () => {
   try {
     await orderService.create({
-      items: items,
+     items: items.map(item => ({
+        book: item.book._id,  
+        quantity: item.quantity
+      })),
       shippingAddress: {
         street: '123 Main',
         city: 'Johannesburg',
@@ -55,6 +60,7 @@ const handleCheckout = async () => {
     console.error(error);
   }
 };
+console.log(items)
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">

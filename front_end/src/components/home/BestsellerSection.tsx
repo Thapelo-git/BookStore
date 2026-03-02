@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp } from 'lucide-react';
-import { books } from '../../data/mockData';
+
 import { BookCard } from '../BooKCard';
 import { Button } from '../ui/button';
-
-export function BestsellerSection() {
-  const bestsellers = books.filter((book) => book.bestseller).slice(0, 4);
-
+import { Book } from '../../types/book';
+interface Props {
+  books: Book[];
+}
+export function BestsellerSection({books}:Props) {
+  const bestsellers = books.filter((book) => book).slice(0, 4);
+console.log(bestsellers)
   return (
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4">
@@ -35,7 +38,7 @@ export function BestsellerSection() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {bestsellers.map((book, index) => (
             <div
-              key={book.id}
+              key={book._id}
               className="animate-slide-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
