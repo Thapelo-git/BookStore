@@ -14,7 +14,7 @@ import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import AuthPage from './pages/AuthPage';
 import BookDetailPage from './pages/BookDetailPage';
-import CartPage from './pages/CardPage';
+import CartPage from './pages/CartPage';
 import ClientAccount from './pages/ClientAccount';
 import MerchantDashboard from './pages/MerchantDashboard';
 import AdminDashboard from './pages/AdminDashboard';

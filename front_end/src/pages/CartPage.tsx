@@ -54,13 +54,13 @@ const handleCheckout = async () => {
         country: 'South Africa'
       }
     });
-
+console.log(items)
     clearCart();
   } catch (error) {
     console.error(error);
   }
 };
-console.log(items)
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">

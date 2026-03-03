@@ -7,11 +7,7 @@ import {
   CreditCard,
   Settings,
   LogOut,
-  ChevronRight,
-  BookOpen,
-  Clock,
-  Truck,
-  CheckCircle,
+ 
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -25,6 +21,7 @@ import { OrdersTab } from '../components/account/OrdersTab';
 import { WishlistTab } from '../components/account/WishlistTab';
 import { PaymentMethodsTab } from '../components/account/PaymentMethodsTab';
 import { SettingsTab } from '../components/account/SettingsTab';
+import { ProfileTab } from '../components/account/ProfileTab';
 
 //import { Link, useLocation } from 'react-router-dom';
 
@@ -44,7 +41,7 @@ const ClientAccount = () => {
   const renderTab = () => {
     switch (activeTab) {
       case 'profile':
-        return <ProfileTab />;
+        return <ProfileTab/>
       case 'orders':
         return <OrdersTab/>;
       case 'wishlist':
@@ -60,16 +57,7 @@ const ClientAccount = () => {
 
 
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'Delivered':
-        return <CheckCircle className="h-4 w-4 text-secondary" />;
-      case 'Shipped':
-        return <Truck className="h-4 w-4 text-primary" />;
-      default:
-        return <Clock className="h-4 w-4 text-accent" />;
-    }
-  };
+ 
 
 // HeartToggle component for wishlist icon
 // function HeartToggle() {
@@ -149,7 +137,7 @@ const ClientAccount = () => {
             </Card>
           </div>
 
-         
+         <div className="lg:col-span-3">{renderTab()}</div>
         </div>
       </div>
     </Layout>

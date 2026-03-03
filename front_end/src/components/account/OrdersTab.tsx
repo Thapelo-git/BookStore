@@ -1,51 +1,52 @@
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent,  } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { CheckCircle, Truck, Clock, Package, Eye } from 'lucide-react';
-import { books } from '../../data/mockData';
-
-const orders = [
-  {
-    id: '#ORD-1234',
-    date: '2024-01-15',
-    status: 'Delivered',
-    total: 67.98,
-    books: [books[0], books[2]],
-    trackingNumber: 'TRK-9876543210',
-  },
-  {
-    id: '#ORD-1233',
-    date: '2024-01-10',
-    status: 'Shipped',
-    total: 24.99,
-    books: [books[1]],
-    trackingNumber: 'TRK-1234567890',
-  },
-  {
-    id: '#ORD-1232',
-    date: '2024-01-05',
-    status: 'Processing',
-    total: 89.97,
-    books: [books[3], books[4], books[5]],
-    trackingNumber: null,
-  },
-  {
-    id: '#ORD-1231',
-    date: '2023-12-20',
-    status: 'Delivered',
-    total: 42.98,
-    books: [books[6], books[7]],
-    trackingNumber: 'TRK-5555555555',
-  },
-  {
-    id: '#ORD-1230',
-    date: '2023-12-10',
-    status: 'Cancelled',
-    total: 17.99,
-    books: [books[7]],
-    trackingNumber: null,
-  },
-];
+import { Order } from '../../types/book';
+import { orderService } from '../../services/api';
+import { useEffect,useState } from 'react';
+// const orders = [
+//   {
+//     id: '#ORD-1234',
+//     date: '2024-01-15',
+//     status: 'Delivered',
+//     total: 67.98,
+//     books: [books[0], books[2]],
+//     trackingNumber: 'TRK-9876543210',
+//   },
+//   {
+//     id: '#ORD-1233',
+//     date: '2024-01-10',
+//     status: 'Shipped',
+//     total: 24.99,
+//     books: [books[1]],
+//     trackingNumber: 'TRK-1234567890',
+//   },
+//   {
+//     id: '#ORD-1232',
+//     date: '2024-01-05',
+//     status: 'Processing',
+//     total: 89.97,
+//     books: [books[3], books[4], books[5]],
+//     trackingNumber: null,
+//   },
+//   {
+//     id: '#ORD-1231',
+//     date: '2023-12-20',
+//     status: 'Delivered',
+//     total: 42.98,
+//     books: [books[6], books[7]],
+//     trackingNumber: 'TRK-5555555555',
+//   },
+//   {
+//     id: '#ORD-1230',
+//     date: '2023-12-10',
+//     status: 'Cancelled',
+//     total: 17.99,
+//     books: [books[7]],
+//     trackingNumber: null,
+//   },
+// ];
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -74,6 +75,16 @@ const getStatusVariant = (status: string) => {
 };
 
 export const OrdersTab = () => {
+
+    const [orders, setOrders] = useState<Order[]>([]);
+      useEffect(() => {
+      const fetchOrders = async () => {
+        const res = await orderService.getMyOrders();
+        setOrders(res.data);
+      };
+    
+      fetchOrders();
+    }, []);
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -82,11 +93,11 @@ export const OrdersTab = () => {
       </div>
 
       {orders.map((order) => (
-        <Card key={order.id} className="shadow-soft">
+        <Card key={order._id} className="shadow-soft">
           <CardContent className="p-5">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="font-display text-lg font-semibold">{order.id}</span>
+                <span className="font-display text-lg font-semibold">{order._id}</span>
                 <Badge variant={getStatusVariant(order.status)}>
                   <span className="flex items-center gap-1">
                     {getStatusIcon(order.status)}
@@ -98,7 +109,7 @@ export const OrdersTab = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              {order.books.map((book) => (
+              {order.items.map((book) => (
                 <div key={book._id} className="relative">
                   <img
                     src={book.coverImage}
@@ -110,7 +121,7 @@ export const OrdersTab = () => {
               <div className="ml-auto text-right">
                 <p className="font-display text-xl font-bold">${order.total.toFixed(2)}</p>
                 <p className="text-sm text-muted-foreground">
-                  {order.books.length} {order.books.length === 1 ? 'item' : 'items'}
+                  {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
                 </p>
               </div>
             </div>

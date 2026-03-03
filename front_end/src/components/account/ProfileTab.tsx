@@ -1,10 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { ChevronRight, Package, BookOpen, Heart } from 'lucide-react';
+import { ChevronRight, Package, BookOpen,  } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBooks } from '../../hooks/useBooks';
 import { orderService } from '../../services/api';
 import { Order } from '../../types/book';
+import {
+ 
+  Clock,
+  Truck,
+  CheckCircle,
+} from 'lucide-react';
 import  { useEffect, useState } from 'react';
 // const recentOrders = [
 //   {
@@ -29,6 +35,7 @@ export const ProfileTab = () => {
     books, 
     
   } = useBooks();
+  const [orders, setOrders] = useState<Order[]>([]);
   useEffect(() => {
   const fetchOrders = async () => {
     const res = await orderService.getMyOrders();
@@ -37,44 +44,20 @@ export const ProfileTab = () => {
 
   fetchOrders();
 }, []);
-const [orders, setOrders] = useState<Order[]>([]);
+
+ const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'Delivered':
+        return <CheckCircle className="h-4 w-4 text-secondary" />;
+      case 'Shipped':
+        return <Truck className="h-4 w-4 text-primary" />;
+      default:
+        return <Clock className="h-4 w-4 text-accent" />;
+    }
+  };
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="shadow-soft">
-          <CardContent className="flex items-center gap-4 p-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <Package className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">12</p>
-              <p className="text-sm text-muted-foreground">Total Orders</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-soft">
-          <CardContent className="flex items-center gap-4 p-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/10">
-              <BookOpen className="h-6 w-6 text-secondary" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">28</p>
-              <p className="text-sm text-muted-foreground">Books Bought</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-soft">
-          <CardContent className="flex items-center gap-4 p-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
-              <Heart className="h-6 w-6 text-accent" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">8</p>
-              <p className="text-sm text-muted-foreground">Wishlist Items</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+     
 
        {/* Main Content */}
           <div className="space-y-6 lg:col-span-3">
