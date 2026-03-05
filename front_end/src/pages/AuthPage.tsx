@@ -15,7 +15,7 @@ const AuthPage = () => {
       name: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      confirmPassword: '' ,
       role:''
     });
     const [passwordError, setPasswordError] = useState('');
@@ -95,24 +95,22 @@ const [email, setEmail] = useState('');
       clearError();
     }, [email, password, clearError]);
   
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-   
-     e.preventDefault();
-     try {
-       await login({ email, password });
-       // Navigation happens automatically
-         console.log('Login successful, useEffect will handle navigation');
-     } catch (error: unknown) {
-       let message = 'Login failed';
-       if (isAxiosError(error)) {
-         message = error.response?.data?.message || error.message || message;
-       } else if (error instanceof Error) {
-         message = error.message;
-       }
-       // Set error in local state or store
-       console.error('Error occurred:', message);
-     }
-   
+   const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await login({ email, password });
+      // Navigation happens automatically
+        console.log('Login successful, useEffect will handle navigation');
+    } catch (error: unknown) {
+      let message = 'Login failed';
+      if (isAxiosError(error)) {
+        message = error.response?.data?.message || error.message || message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+      // Set error in local state or store
+      console.error('Error occurred:', message);
+    }
   };
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
