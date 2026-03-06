@@ -1,0 +1,148 @@
+import { Request } from 'express';
+import { Types } from "mongoose";
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: 'user' | 'admin' | 'merchant';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IBook {
+  _id?: string;
+
+  title: string;
+  author: string;
+  description?: string;
+
+  price: number;
+  originalPrice?: number;
+
+  coverImage?: string;
+  category?: string;
+
+  stock: number;
+
+  rating: number;
+  reviewCount: number;
+
+  publishedDate?: Date;
+
+  isbn: string;
+  pages?: number;
+  language?: string;
+
+  featured?: boolean;
+  bestseller?: boolean;
+
+  merchantId?: string;
+  merchantName?: string;
+
+  createdBy: string;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface BookCreateRequest {
+  title: string;
+  author: string;
+  isbn: string;
+  publishedYear: number;
+  available: boolean;
+  genre?: string;
+  description?: string;
+}
+
+export interface BookUpdateRequest extends Partial<BookCreateRequest> {}
+
+export interface BookResponse {
+  success: boolean;
+  data?: IBook | IBook[];
+  message?: string;
+  pagination?: {
+    page: number;
+    limit: number; 
+    total: number;
+    pages: number;
+  };
+}
+
+export interface BookQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  author?: string;
+  available?: boolean;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+export interface AuthRequest extends Request {
+  user?: {
+  id: string;
+  email: string;
+  role: string;
+  name: string;
+  _id?: any;
+};
+  resource?: any;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  name: string;
+  email: string;
+  password: string;
+  role?: string;
+}
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+export interface IOrderItem {
+  book: string; // ObjectId
+  quantity: number;
+}
+
+export interface IOrder {
+  _id?: string;
+  user: string; // ObjectId
+  items: IOrderItem[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  shippingAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+export interface Address {
+  street: string;
+  city: string;
+  state?: string;
+  zipCode?: string;
+  country: string;
+}
+
+export interface AddressDocument extends Address {
+  _id: Types.ObjectId;
+  user: Types.ObjectId;
+  label: string;
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
