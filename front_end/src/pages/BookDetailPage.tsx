@@ -6,13 +6,14 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
 import { useCart } from '../contexts/CartContext';
-
+import { useWishlist } from '../contexts/WishlistContext';
 import { useBooks } from '../hooks/useBooks';
-
+import { cn } from '../components/lib/utils';
 const BookDetailPage = () => {
 
   const { id } = useParams();
   const { addToCart } = useCart();
+ const { isInWishlist, toggleWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
   const { books, loading } = useBooks();
 
@@ -166,8 +167,9 @@ const BookDetailPage = () => {
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 Add to Cart
               </Button>
-              <Button variant="outline" size="lg">
-                <Heart className="h-5 w-5" />
+              <Button variant="outline" size="lg"
+              onClick={() => toggleWishlist(book)}>
+                <Heart className={cn('h-5 w-5', isInWishlist(book._id) ? 'fill-destructive text-destructive' : '')}/>
               </Button>
               <Button variant="outline" size="lg">
                 <Share2 className="h-5 w-5" />

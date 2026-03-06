@@ -3,26 +3,27 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Heart, ShoppingCart, Trash2, Star } from 'lucide-react';
 import { useBooks} from '../../hooks/useBooks';
-import { useCart } from '../../contexts/CartContext';
+import { useWishlist } from '../../contexts/WishlistContext';
 import { Link } from 'react-router-dom';
 import { toast } from '../../hooks/use-toast';
 import { Book } from '../../types/book';
+import { useCart } from '../../contexts/CartContext';
+
+
 
 export const WishlistTab = () => {
      const { 
     books, 
     
   } = useBooks();
-  const [wishlist, setWishlist] = useState<Book[]>(books.slice(0, 5));
+    const { wishlist, removeFromWishlist } = useWishlist();
+ 
+  
+
   const { addToCart } = useCart();
 
-  const removeFromWishlist = (bookId: string) => {
-    setWishlist((prev) => prev.filter((b) => b._id !== bookId));
-    toast({ title: 'Removed from wishlist', description: 'Book removed from your wishlist.' });
-  };
-
   const handleAddToCart = (book: Book) => {
-    addToCart(book);
+   addToCart(book);
     removeFromWishlist(book._id);
   };
 

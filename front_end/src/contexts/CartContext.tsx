@@ -10,7 +10,7 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   itemCount: number;
-}
+} 
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 

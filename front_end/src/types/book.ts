@@ -68,7 +68,10 @@ export interface CartItem {
   book: Book;
   quantity: number;
 }
-
+export interface WishlistItem {
+  book: Book;
+  quantity: number;
+}
 export interface Category {
   id?: string;
   name: string;

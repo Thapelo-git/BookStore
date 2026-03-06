@@ -6,6 +6,7 @@ import {
   BookUpdateRequest,
   BookQueryParams,CartItem,Address,OrderItemRequest 
 } from '../types/book';
+import { SavedAddress } from '../contexts/AddressContext';
 
 const API_BASE_URL = 'http://localhost:5002/api';
 
@@ -184,6 +185,17 @@ export const orderService = {
 
   delete: (id: string) => api.delete(`/orders/${id}`),
 };
+export const addressService = {
+  getAll: () => api.get('/addresses'),
 
+  create: (address: Omit<SavedAddress, 'id'>) =>
+    api.post('/addresses', address),
+
+  update: (id: string, address: Partial<SavedAddress>) =>
+    api.put(`/addresses/${id}`, address),
+
+  remove: (id: string) =>
+    api.delete(`/addresses/${id}`),
+};
 
 export default api;

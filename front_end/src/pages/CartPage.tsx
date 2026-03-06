@@ -7,11 +7,10 @@ import { useCart } from '../contexts/CartContext';
 import { orderService } from '../services/api';
 import { Book } from '../types/book';
 
-//import { useBooks } from '../hooks/useBooks';
-export interface CartItem {
+export interface CartItem { 
   book: Book;
   quantity: number;
-}
+} 
 
 
 const CartPage = () => {

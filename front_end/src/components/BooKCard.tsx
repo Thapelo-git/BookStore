@@ -4,6 +4,7 @@ import { Book } from '../types/book';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { useCart } from '../contexts/CartContext'
+
 import { cn } from '../components/lib/utils';
 
 interface BookCardProps {
@@ -13,7 +14,7 @@ interface BookCardProps {
 
 export function BookCard({ book, className }: BookCardProps) {
   const { addToCart } = useCart();
-
+  
   return (
     <article
       className={cn(

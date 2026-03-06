@@ -22,14 +22,16 @@ import { WishlistTab } from '../components/account/WishlistTab';
 import { PaymentMethodsTab } from '../components/account/PaymentMethodsTab';
 import { SettingsTab } from '../components/account/SettingsTab';
 import { ProfileTab } from '../components/account/ProfileTab';
+import { AddressesTab } from '../components/account/AddressesTab';
 
 //import { Link, useLocation } from 'react-router-dom';
 
-type AccountTab = 'profile' | 'orders' | 'wishlist' | 'payment' | 'settings';
+type AccountTab = 'profile' | 'orders' | 'wishlist'|'addresses' | 'payment' | 'settings';
 const navItems: { key: AccountTab; label: string; icon: React.ElementType }[] = [
   { key: 'profile', label: 'Profile', icon: User },
   { key: 'orders', label: 'Orders', icon: Package },
   { key: 'wishlist', label: 'Wishlist', icon: Heart },
+  { key: 'addresses', label: 'Addresses', icon: MapPin },
   { key: 'payment', label: 'Payment Methods', icon: CreditCard },
   { key: 'settings', label: 'Settings', icon: Settings },
 ];
@@ -46,6 +48,8 @@ const ClientAccount = () => {
         return <OrdersTab/>;
       case 'wishlist':
         return <WishlistTab />;
+        case 'addresses':
+        return <AddressesTab />;
       case 'payment':
         return <PaymentMethodsTab />;
       case 'settings':
