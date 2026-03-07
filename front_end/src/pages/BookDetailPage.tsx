@@ -9,6 +9,8 @@ import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useBooks } from '../hooks/useBooks';
 import { cn } from '../components/lib/utils';
+import { toast } from '../hooks/use-toast';
+import { BookReviews } from '../components/books/BookReviews';
 const BookDetailPage = () => {
 
   const { id } = useParams();
@@ -153,7 +155,13 @@ const BookDetailPage = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setQuantity(quantity + 1)}
+                           onClick={() => {
+                    if (quantity + 1 > book.stock) {
+                      toast({ title: 'Stock limit', description: `Only ${book.stock} available.`, variant: 'destructive' });
+                      return;
+                    }
+                    setQuantity(quantity + 1);
+                  }}
                 >
                   +
                 </Button>
@@ -233,6 +241,7 @@ const BookDetailPage = () => {
             </div>
           </div>
         </div>
+        <BookReviews bookId={book._id} />
       </div>
     </Layout>
   );

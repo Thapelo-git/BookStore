@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, 
+ useEffect, useCallback } from 'react';
 import { Address } from '../types/book';
 import { toast } from '../hooks/use-toast';
 import { addressService } from '../services/api';
-
+import { useAuthStore } from "../stores/authStore";
 export interface SavedAddress extends Address {
   id: string;
   label: string;
@@ -22,12 +23,51 @@ const AddressContext = createContext<AddressContextType | undefined>(undefined);
 
 export function AddressProvider({ children }: { children: React.ReactNode }) {
   const [addresses, setAddresses] = useState<SavedAddress[]>([]);
+ const isAuthenticated = useAuthStore((state) => state.isAuthenticated); 
+const fetchAddresses = useCallback(async () => {
+  try {
+    const res = await addressService.getAll();
 
+    const mapped = res.data.data.map((a: any) => ({
+      id: a._id,
+      label: a.label,
+      street: a.street,
+      city: a.city,
+      state: a.state,
+      zipCode: a.zipCode,
+      country: a.country,
+      isDefault: a.isDefault
+    }));
+
+    setAddresses(mapped);
+  } catch (error) {
+    console.error("Failed to fetch addresses");
+  }
+}, []);
+
+useEffect(() => {
+  if (isAuthenticated) {
+    fetchAddresses();
+  } else {
+    setAddresses([]);
+  }
+}, [isAuthenticated, fetchAddresses]);
   const addAddress = useCallback(async (address: Omit<SavedAddress, 'id'>) => {
   try {
     const res = await addressService.create(address);
 
-    const newAddress: SavedAddress = res.data.data;
+   const addr = res.data.data;
+
+const newAddress: SavedAddress = {
+  id: addr._id,
+  label: addr.label,
+  street: addr.street,
+  city: addr.city,
+  state: addr.state,
+  zipCode: addr.zipCode,
+  country: addr.country,
+  isDefault: addr.isDefault || false,
+};
 
     setAddresses((prev) => {
       if (newAddress.isDefault) {

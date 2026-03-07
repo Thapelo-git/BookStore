@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { ChevronRight, Package, BookOpen,  } from 'lucide-react';
+import { ChevronRight, Package, BookOpen,Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBooks } from '../../hooks/useBooks';
 import { orderService } from '../../services/api';
@@ -96,9 +96,9 @@ export const ProfileTab = () => {
                 <CardContent className="flex items-center gap-4 p-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
                     {/* Heart icon toggle */}
-                    {/* <HeartToggle /> */}
+                    <Heart color='red' />
                   </div>
-                  {/* <div>
+                  <div>
                     <p className="text-2xl font-bold">{(() => {
                       // Wishlist count from localStorage (assume 'wishlist' is an array of book IDs)
                       let wishlistCount = 0;
@@ -109,7 +109,7 @@ export const ProfileTab = () => {
                       return wishlistCount;
                     })()}</p>
                     <p className="text-sm text-muted-foreground">Wishlist Items</p>
-                  </div> */}
+                  </div>
                 </CardContent>
               </Card>
         

@@ -6,10 +6,12 @@ import { CartProvider } from './contexts/CartContext.tsx'
 import { AuthProvider } from './contexts/AuthContext.tsx'
 import { WishlistProvider } from './contexts/WishlistContext.tsx'
 import { AddressProvider } from './contexts/AddressContext.tsx'
+import { ReviewProvider } from './contexts/ReviewContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
+      <ReviewProvider>
       <WishlistProvider>
     <CartProvider>
   <AddressProvider>
@@ -17,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
     </AddressProvider>
     </CartProvider>
     </WishlistProvider>
+    </ReviewProvider>
     </AuthProvider>
   </StrictMode>,
 )

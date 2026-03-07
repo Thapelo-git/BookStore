@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 
-import { BookCard } from '../BooKCard';
+import { BookCard } from '../books/BookCard';
 import { Button } from '../ui/button';
 import { Book } from '../../types/book';
 interface Props {

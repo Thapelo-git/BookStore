@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart,Heart } from 'lucide-react';
 import { Book } from '../../types/book';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { useCart } from '../../contexts/CartContext';
 import { cn } from '../lib/utils';
-
+import { useWishlist } from '../../contexts/WishlistContext';
 interface BookCardProps {
   book: Book;
   className?: string;
@@ -13,7 +13,7 @@ interface BookCardProps {
 
 export function BookCard({ book, className }: BookCardProps) {
   const { addToCart } = useCart();
-
+ const { isInWishlist, toggleWishlist } = useWishlist();
   return (
     <article
       className={cn(
@@ -21,6 +21,22 @@ export function BookCard({ book, className }: BookCardProps) {
         className
       )}
     >
+        <Button
+        size="icon"
+        variant="ghost"
+        className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+        onClick={(e) => {
+          e.preventDefault();
+          toggleWishlist(book);
+        }}
+      >
+        <Heart
+          className={cn(
+            'h-4 w-4 transition-colors',
+            isInWishlist(book._id) ? 'fill-destructive text-destructive' : 'text-muted-foreground'
+          )}
+        />
+      </Button>
       {/* Badges */}
       <div className="absolute left-3 top-3 z-10 flex flex-col gap-1">
         {book.bestseller && (
@@ -64,11 +80,11 @@ export function BookCard({ book, className }: BookCardProps) {
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="font-display text-lg font-bold text-foreground">
-              ${book.price}
+              R{book.price}
             </span>
             {book.originalPrice && (
               <span className="text-sm text-muted-foreground line-through">
-                ${book.originalPrice}
+                R{book.originalPrice}
               </span>
             )}
           </div>

@@ -4,7 +4,7 @@ import { AuthRequest } from '../types/book';
 // Create address
 export const createAddress = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
     const address = await Address.create({
       ...req.body,
@@ -27,7 +27,7 @@ export const createAddress = async (req: AuthRequest, res: Response) => {
 // Get user addresses
 export const getAddresses = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id;
 
     const addresses = await Address.find({ user: userId });
 
@@ -46,40 +46,32 @@ export const getAddresses = async (req: AuthRequest, res: Response) => {
 
 // Update address
 export const updateAddress = async (req: AuthRequest, res: Response) => {
-  try {
-    const address = await Address.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
 
-    res.json({
-      success: true,
-      data: address,
-    });
+  const address = await Address.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      user: req.user?.id
+    },
+    req.body,
+    { new: true }
+  );
 
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to update address',
-    });
-  }
+  res.json({
+    success: true,
+    data: address
+  });
 };
 
 // Delete address
 export const deleteAddress = async (req: AuthRequest, res: Response) => {
-  try {
-    await Address.findByIdAndDelete(req.params.id);
 
-    res.json({
-      success: true,
-      message: 'Address deleted',
-    });
+  await Address.findOneAndDelete({
+    _id: req.params.id,
+    user: req.user?.id
+  });
 
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to delete address',
-    });
-  }
+  res.json({
+    success: true,
+    message: "Address deleted"
+  });
 };
