@@ -111,3 +111,11 @@ export interface BookQueryParams {
 export interface BookUpdateRequest extends Partial<BookCreateRequest> {
   id: string;
 }
+export interface Review {
+  id: string;
+  bookId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}

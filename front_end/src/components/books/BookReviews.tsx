@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Star, Send } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Textarea } from '../../components/ui/textarea';
 import { Input } from '../../components/ui/input';
 import { Separator } from '../../components/ui/separator';
-import { useReviews } from '../../contexts/ReviewContext';
+import {useReviews} from '../../contexts/ReviewContext';
 import { cn } from '../lib/utils';
 import { toast } from '../../hooks/use-toast';
 
@@ -37,18 +37,21 @@ function StarRating({ rating, onRate, interactive = false }: { rating: number; o
 }
 
 export function BookReviews({ bookId }: BookReviewsProps) {
-  const { getReviews, addReview } = useReviews();
-  const reviews = getReviews(bookId);
+  const { reviews,fetchReviews,addReview} = useReviews();
+  const bookReviews = reviews.filter(r => r.bookId === bookId)
 
+useEffect(() => {
+  fetchReviews(bookId);
+}, [bookId]);
   const [name, setName] = useState('');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
 
   const handleSubmit = () => {
-    if (!name.trim()) {
-      toast({ title: 'Name required', description: 'Please enter your name.', variant: 'destructive' });
-      return;
-    }
+    // if (!name.trim()) {
+    //   toast({ title: 'Name required', description: 'Please enter your name.', variant: 'destructive' });
+    //   return;
+    // }
     if (rating === 0) {
       toast({ title: 'Rating required', description: 'Please select a star rating.', variant: 'destructive' });
       return;
@@ -104,11 +107,11 @@ export function BookReviews({ bookId }: BookReviewsProps) {
       </div>
 
       {/* Reviews List */}
-      {reviews.length === 0 ? (
+      {bookReviews.length === 0 ? (
         <p className="text-muted-foreground text-center py-8">No reviews yet. Be the first to review!</p>
       ) : (
         <div className="space-y-4">
-          {reviews.map((review) => (
+          {bookReviews.map((review) => (
             <div key={review.id} className="rounded-xl border border-border bg-card p-5">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">

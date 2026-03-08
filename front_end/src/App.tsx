@@ -63,11 +63,11 @@ function App() {
             <Route
               path="/books"
               element={
-                <ProtectedRoute>
+                // <ProtectedRoute>
                   <div className="container mx-auto px-4 py-8">
                     <BooksPage/>
                   </div>
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
@@ -88,11 +88,11 @@ function App() {
                 </ProtectedRoute>
               } />
             <Route path="/book/:id" element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                   <div className="container mx-auto px-4 py-8">
                    <BookDetailPage/>
                   </div>
-                </ProtectedRoute>
+                // </ProtectedRoute>
               } />
             <Route
               path="/books/edit/:id"

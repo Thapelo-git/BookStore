@@ -28,13 +28,13 @@ export const useBooks = (): UseBooksReturn => {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 9,
+    limit: 6,
     total: 0,
     pages: 0
   });
   const [filters, setFilters] = useState<BookQueryParams>({
     page: 1,
-    limit: 9,
+    limit: 6,
     sortBy: 'createdAt',
     sortOrder: 'desc'
   });
@@ -58,18 +58,15 @@ export const useBooks = (): UseBooksReturn => {
       localStorageToken: !!currentToken,
       zustandAuthenticated: useAuthStore.getState().isAuthenticated
     });
-    if (!currentToken) {
-      console.error('❌ Cannot load books: No authentication token');
-      setError('Please log in to access books');
-      setBooks([]);
-      return;
-    }
+    
+
+  
     setLoading(true);
     setError(null);
     
      try {
       const queryParams = { ...filtersRef.current, ...params };
-      console.log('📤 Loading books with token:', !!currentToken);
+      
 
       const response = await bookService.getAll(queryParams);
       
@@ -213,14 +210,13 @@ export const useBooks = (): UseBooksReturn => {
     isMountedRef.current = true;
     
     const currentToken = localStorage.getItem('token');
-    console.log('🎯 useBooks init - Token exists:', !!currentToken);
     
-    if (currentToken && !initialLoadDoneRef.current) {
-      console.log('🎯 Initial books load');
-      initialLoadDoneRef.current = true;
-      loadBooks();
-    } else if (!currentToken) {
-      console.log('⏸️ Skipping books load - no token');
+    
+    if (!initialLoadDoneRef.current) {
+  initialLoadDoneRef.current = true;
+  loadBooks();
+}else if (!currentToken) {
+     
       setBooks([]);
     }
 

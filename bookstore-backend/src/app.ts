@@ -98,13 +98,13 @@ connectDB();
 import authRoutes from './routes/auth';
 import bookRoutes from './routes/bookRoutes';
 import address from './routes/address';
-
+import reviewRoutes from './routes/reviewRoutes';
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/addresses', address);
-
+app.use("/api/reviews",reviewRoutes );
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';

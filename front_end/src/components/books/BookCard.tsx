@@ -65,7 +65,7 @@ export function BookCard({ book, className }: BookCardProps) {
         <Link to={`/book/${book._id}`}>
           <h3 className="font-display text-lg font-semibold leading-tight text-foreground line-clamp-2 transition-colors hover:text-primary">
             {book.title}
-          </h3>
+          </h3> 
         </Link>
         <p className="mt-1 text-sm text-muted-foreground">{book.author}</p>
 

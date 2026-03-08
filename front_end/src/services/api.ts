@@ -197,5 +197,16 @@ export const addressService = {
   remove: (id: string) =>
     api.delete(`/addresses/${id}`),
 };
+export const reviewService = {
+  getBookReviews: (bookId: string) =>
+    api.get(`/reviews/book/${bookId}`),
 
+  createReview: (data: {
+    bookId: string;
+    userName: string;
+    rating: number;
+    comment: string;
+  }) =>
+    api.post('/reviews', data),
+};
 export default api;
