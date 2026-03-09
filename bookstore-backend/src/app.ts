@@ -184,21 +184,18 @@ app.post('/api/debug/password-check', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    console.log('🔍 DEBUG: Checking password for:', email);
-    console.log('🔍 DEBUG: Input password:', password);
+   
     
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.json({ error: 'User not found' });
     }
 
-    console.log('🔍 DEBUG: Stored password hash:', user.password);
-    console.log('🔍 DEBUG: Hash length:', user.password.length);
-    console.log('🔍 DEBUG: Hash starts with:', user.password.substring(0, 10));
+   
 
     // Test manual bcrypt comparison
     const manualMatch = await bcrypt.compare(password, user.password);
-    console.log('🔍 DEBUG: Manual bcrypt.compare result:', manualMatch);
+    
 
     // Test if the input password matches the stored hash
     const testHashes = await Promise.all([

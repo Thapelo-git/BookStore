@@ -5,14 +5,14 @@ import {
   deleteReview,
 } from "../controllers/reviewController";
 
-import { auth } from '../middleware/auth';
+import { auth,optionalAuth } from '../middleware/auth';
 const router = express.Router();
 
 /* Public route */
 router.get("/book/:bookId", getBookReviews);
 
 /* Protected routes */
-router.post("/",  createReview);
+router.post("/",optionalAuth,  createReview);
 
 router.delete("/:id", auth, deleteReview);
 

@@ -213,29 +213,44 @@ export const canModifyBooks = (req, res, next) => {
  * Optional auth middleware - doesn't block request if no token
  * but still adds user to request if token is valid
  */
-export const optionalAuth = async (req, res, next) => {
+export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return next();
+
   try {
-    let token = req.header('Authorization');
-    
-    if (!token && req.cookies?.token) {
-      token = `Bearer ${req.cookies.token}`;
-    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
 
-    if (token && token.startsWith('Bearer ')) {
-      const actualToken = token.replace('Bearer ', '').trim();
-      
-      // Skip blacklist check for optional auth
-      const decoded = jwt.verify(actualToken, process.env.JWT_SECRET);
-      const user = await User.findById(decoded.id).select('-password');
-      
-      if (user && user.isActive) {
-        req.user = user;
-      }
+    if (decoded.user) {
+      req.user = decoded.user;
     }
+  } catch (err) {}
 
-    next();
-  } catch (error) {
-    // Continue even if token is invalid (optional auth)
-    next();
-  }
+  next();
 };
+// export const optionalAuth = async (req, res, next) => {
+//   try {
+//     let token = req.header('Authorization');
+    
+//     if (!token && req.cookies?.token) {
+//       token = `Bearer ${req.cookies.token}`;
+//     }
+
+//     if (token && token.startsWith('Bearer ')) {
+//       const actualToken = token.replace('Bearer ', '').trim();
+      
+//       // Skip blacklist check for optional auth
+//       const decoded = jwt.verify(actualToken, process.env.JWT_SECRET);
+//       const user = await User.findById(decoded.id).select('-password');
+      
+//       if (user && user.isActive) {
+//         req.user = user;
+//       }
+//     }
+
+//     next();
+//   } catch (error) {
+//     // Continue even if token is invalid (optional auth)
+//     next();
+//   }
+// };

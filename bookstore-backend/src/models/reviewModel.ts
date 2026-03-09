@@ -28,6 +28,8 @@ const reviewSchema = new mongoose.Schema({
   rating: {
     type: Number,
     required: true,
+    min: 1,
+  max: 5,
   },
   comment: {
     type: String,
@@ -36,7 +38,10 @@ const reviewSchema = new mongoose.Schema({
 /*
 Prevent duplicate review by same user
 */
-reviewSchema.index({ user: 1, book: 1 }, { unique: true });
+reviewSchema.index(
+  { user: 1 },
+  { unique: true, partialFilterExpression: { user: { $exists: true } } }
+);
 
 const Review = mongoose.model<ReviewDocument>("Review", reviewSchema);
 

@@ -8,6 +8,8 @@ POST /api/reviews
 */
 export const createReview = async (req: AuthRequest, res: Response) => {
   try {
+     console.log("REVIEW BODY:", req.body);
+    console.log("USER:", req.user);
     const { bookId, rating, comment, userName } = req.body;
 
     const reviewData: any = {
@@ -18,6 +20,7 @@ export const createReview = async (req: AuthRequest, res: Response) => {
  
     if (req.user?.id) {
       reviewData.user = req.user.id;
+      reviewData.userName = req.user.name;
     } else {
       reviewData.userName = userName || "Anonymous";
     }
@@ -39,9 +42,11 @@ export const createReview = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    res.status(500).json({
-      message: "Failed to create review",
-    });
+    console.error("CREATE REVIEW ERROR:", error);
+
+res.status(500).json({
+  message: error.message,
+});
   }
 };
 
