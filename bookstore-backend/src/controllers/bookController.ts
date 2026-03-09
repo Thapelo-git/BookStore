@@ -95,13 +95,13 @@ export class BookController {
   // GET /api/books/:id - Get single book
   async getBook(req: AuthRequest, res: Response) {
     try {
-      const book = await Book.findById({_id:req.params.id,createdBy: req.user?.id });
+      const book = await Book.findById({_id:req.params.id,merchantId: req.user?.id });
       if (!book) {
         return res.status(404).json({
           success: false,
           message: 'Book not found'
         });
-      }
+      } 
       res.status(200).json({
         success: true,
         data: book

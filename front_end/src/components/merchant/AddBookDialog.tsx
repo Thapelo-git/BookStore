@@ -104,7 +104,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       price: Number(form.price),
       originalPrice: form.originalPrice
         ? Number(form.originalPrice)
-        : undefined,
+        : undefined, 
       coverImage: form.coverImage,
       category: form.category,
       stock: Number(form.stock),

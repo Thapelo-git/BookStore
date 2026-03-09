@@ -24,7 +24,7 @@ const MerchantDashboard = () => {
    const { user,  logout } = useAuthStore();
   const { books } = useBooks();
   // Only show books listed by this merchant
-  const merchantBooks = books.filter(book => book.merchantId === user?._id);
+  const merchantBooks = books.filter(book => book.merchantId === user?.id);
 
   const handleAddBook = (newBook: Book) => {
     // Optionally, you can refetch books or update state if needed
