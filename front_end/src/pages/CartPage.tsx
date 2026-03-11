@@ -4,6 +4,7 @@ import { Layout } from '../components/layout/Layout';
 import { Button } from '../components/ui/button';
 import { Separator } from '../components/ui/separator';
 import { useCart } from '../contexts/CartContext';
+import { useAddress } from '../contexts/AddressContext';
 import { orderService } from '../services/api';
 import { Book } from '../types/book';
 
@@ -15,7 +16,7 @@ export interface CartItem {
 
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, total, clearCart } = useCart();
-
+const {addresses}=useAddress()
   if (items.length === 0) {
     return (
       <Layout>
@@ -45,13 +46,13 @@ const handleCheckout = async () => {
         book: item.book._id,  
         quantity: item.quantity
       })),
-      shippingAddress: {
-        street: '123 Main',
-        city: 'Johannesburg',
-        state: 'Gauteng',
-        zipCode: '2000',
-        country: 'South Africa'
-      }
+      shippingAddress:addresses.map(address => ({
+        street: address.street,
+  city: address.city,
+  state: address.state,
+  zipCode: address.zipCode,
+  country: address.country
+      })),
     });
 console.log(items)
     clearCart();

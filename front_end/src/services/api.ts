@@ -138,7 +138,7 @@ export const bookService = {
         }
       });
     }
-    
+     
     console.log('📚 Getting books with cleaned params:', cleanParams);
     return api.get('/books', { params: cleanParams });
   },
@@ -184,6 +184,9 @@ export const orderService = {
     api.put(`/orders/${id}`, { status }),
 
   delete: (id: string) => api.delete(`/orders/${id}`),
+  getMerchantOrders: () => {
+    return api.get("/orders/merchant");
+  }
 };
 export const addressService = {
   getAll: () => api.get('/addresses'),

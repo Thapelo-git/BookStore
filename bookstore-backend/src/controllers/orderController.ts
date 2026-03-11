@@ -11,7 +11,7 @@ export const createOrder = async (req: AuthRequest, res:Response) => {
     }
 
     let total = 0;
-    const orderItems = [];
+    const orderItems = []; 
 
     for (const item of items) {
       const book = await Book.findById(item.book);
@@ -27,16 +27,19 @@ export const createOrder = async (req: AuthRequest, res:Response) => {
         quantity: item.quantity,
         price: book.price, // store snapshot price
       });
-    }
-
+      
     const order = await Order.create({
       user: req.user.id,
       items: orderItems,
+      merchant:book.merchantId,
       total,
       shippingAddress,
     });
-    console.log("User",req.user)
+      console.log("User",req.user)
     res.status(201).json(order);
+    }
+
+  
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -48,3 +51,18 @@ export const getMyOrders = async (req: AuthRequest, res: Response) => {
 
   res.json(orders);
 };
+export const getMerchantOrders = async (req: AuthRequest, res: Response)=>{
+
+const orders = await Order.find({
+  merchant: req.user.id
+})
+.populate("user","name email")
+.populate("items.book","title coverImage price");
+
+
+res.json({
+ success:true,
+ data:orders
+});
+
+}

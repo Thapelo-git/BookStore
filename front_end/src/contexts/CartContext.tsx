@@ -10,13 +10,14 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   itemCount: number;
+  
 } 
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-
+    
   const addToCart = useCallback((book: Book, quantity = 1) => {
     setItems((prev) => {
       const existingItem = prev.find((item) => item.book._id === book._id);
@@ -76,6 +77,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         total,
         itemCount,
+       
       }}
     >
       {children}

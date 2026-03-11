@@ -109,7 +109,7 @@ export interface BookQueryParams {
   order?: 'asc' | 'desc';
 }
 export interface BookUpdateRequest extends Partial<BookCreateRequest> {
-  id: string;
+  _id: string;
 }
 export interface Review {
   id: string;
@@ -117,5 +117,24 @@ export interface Review {
   userName: string;
   rating: number;
   comment: string;
+  createdAt: string;
+}
+export interface OrderItem {
+  book: {
+    _id: string;
+    title: string;
+  };
+  quantity: number;
+}
+
+export interface MerchantOrder {
+  _id: string;
+  user: {
+    name: string;
+    email: string;
+  };
+  items: OrderItem[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   createdAt: string;
 }

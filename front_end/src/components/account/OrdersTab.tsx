@@ -2,51 +2,10 @@ import { Card, CardContent,  } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { CheckCircle, Truck, Clock, Package, Eye } from 'lucide-react';
-import { Order } from '../../types/book';
+import { Order,Book } from '../../types/book';
 import { orderService } from '../../services/api';
 import { useEffect,useState } from 'react';
-// const orders = [
-//   {
-//     id: '#ORD-1234',
-//     date: '2024-01-15',
-//     status: 'Delivered',
-//     total: 67.98,
-//     books: [books[0], books[2]],
-//     trackingNumber: 'TRK-9876543210',
-//   },
-//   {
-//     id: '#ORD-1233',
-//     date: '2024-01-10',
-//     status: 'Shipped',
-//     total: 24.99,
-//     books: [books[1]],
-//     trackingNumber: 'TRK-1234567890',
-//   },
-//   {
-//     id: '#ORD-1232',
-//     date: '2024-01-05',
-//     status: 'Processing',
-//     total: 89.97,
-//     books: [books[3], books[4], books[5]],
-//     trackingNumber: null,
-//   },
-//   {
-//     id: '#ORD-1231',
-//     date: '2023-12-20',
-//     status: 'Delivered',
-//     total: 42.98,
-//     books: [books[6], books[7]],
-//     trackingNumber: 'TRK-5555555555',
-//   },
-//   {
-//     id: '#ORD-1230',
-//     date: '2023-12-10',
-//     status: 'Cancelled',
-//     total: 17.99,
-//     books: [books[7]],
-//     trackingNumber: null,
-//   },
-// ];
+
 
 const getStatusIcon = (status: string) => {
   switch (status) {
@@ -82,7 +41,7 @@ export const OrdersTab = () => {
         const res = await orderService.getMyOrders();
         setOrders(res.data);
       };
-    
+     
       fetchOrders();
     }, []);
   return (
@@ -105,15 +64,15 @@ export const OrdersTab = () => {
                   </span>
                 </Badge>
               </div>
-              <span className="text-sm text-muted-foreground">{order.date}</span>
+              <span className="text-sm text-muted-foreground">{new Date(order.createdAt).toLocaleDateString()}</span>
             </div>
 
             <div className="flex items-center gap-3">
-              {order.items.map((book) => (
-                <div key={book._id} className="relative">
+              {orders.map((order) => (
+                <div key={order._id} className="relative">
                   <img
-                    src={book.coverImage}
-                    alt={book.title}
+                    src={order.items[0]?.book.coverImage}
+                    alt={order.items[0]?.book.title}
                     className="h-20 w-14 rounded object-cover shadow-sm"
                   />
                 </div>
@@ -139,7 +98,7 @@ export const OrdersTab = () => {
                   <Eye className="mr-1 h-3 w-3" />
                   View Details
                 </Button>
-                {order.status === 'Delivered' && (
+                {order.status === 'delivered' && (
                   <Button variant="secondary" size="sm">
                     Buy Again
                   </Button>

@@ -119,13 +119,13 @@ const handleSubmit = async (e: React.FormEvent) => {
       onAddBook(response.data.data);
       toast.success('Book created successfully');
       console.log("Submitting form...");
-    } else if (mode === 'edit' && initialData?.id) {
+    } else if (mode === 'edit' && initialData?._id) {
       const updatePayload: BookUpdateRequest = {
-        id: initialData.id,
+        _id: initialData._id,
         ...payload,
       };
 
-      await bookService.update(updatePayload.id, updatePayload);
+      await bookService.update(updatePayload._id, updatePayload);
       toast.success('Book updated successfully');
     }
 

@@ -97,7 +97,7 @@ const newAddress: SavedAddress = {
       }
       return filtered;
     });
-    toast({ title: 'Address removed' });
+    toast({ title: 'Address removed' }); 
   }, []);
 
   const updateAddress = useCallback((id: string, updates: Partial<SavedAddress>) => {
