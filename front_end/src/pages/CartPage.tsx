@@ -16,7 +16,7 @@ export interface CartItem {
 
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, total, clearCart } = useCart();
-const {addresses}=useAddress()
+const { defaultAddress } = useAddress();
   if (items.length === 0) {
     return (
       <Layout>
@@ -40,21 +40,26 @@ const {addresses}=useAddress()
     );
   }
 const handleCheckout = async () => {
+  if (!defaultAddress) {
+    alert("Please add a shipping address first");
+    return;
+  }
+
   try {
     await orderService.create({
      items: items.map(item => ({
         book: item.book._id,  
         quantity: item.quantity
       })),
-      shippingAddress:addresses.map(address => ({
-        street: address.street,
-  city: address.city,
-  state: address.state,
-  zipCode: address.zipCode,
-  country: address.country
-      })),
+     shippingAddress: {
+        street: defaultAddress.street,
+        city: defaultAddress.city,
+        state: defaultAddress.state,
+        zipCode: defaultAddress.zipCode,
+        country: defaultAddress.country
+      }
     });
-console.log(items)
+
     clearCart();
   } catch (error) {
     console.error(error);

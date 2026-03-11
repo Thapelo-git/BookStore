@@ -105,7 +105,7 @@ const newAddress: SavedAddress = {
       prev.map((a) => (a.id === id ? { ...a, ...updates } : a))
     );
     toast({ title: 'Address updated' });
-  }, []);
+  }, []); 
 
   const setDefaultAddress = useCallback((id: string) => {
     setAddresses((prev) =>
