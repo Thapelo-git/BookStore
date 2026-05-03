@@ -138,11 +138,11 @@ const handleCheckout = async () => {
                       </div>
                       <div className="text-right">
                         <div className="font-display text-lg font-bold">
-                          ${(item.book.price * item.quantity).toFixed(2)}
+                          R{(item.book.price * item.quantity).toFixed(2)}
                         </div>
                         {item.quantity > 1 && (
                           <div className="text-xs text-muted-foreground">
-                            ${item.book.price.toFixed(2)} each
+                            R{item.book.price.toFixed(2)} each
                           </div>
                         )}
                       </div>
@@ -161,24 +161,24 @@ const handleCheckout = async () => {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-medium">${total.toFixed(2)}</span>
+                  <span className="font-medium">R{total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="font-medium text-secondary">
-                    {total >= 35 ? 'Free' : '$4.99'}
+                    {total >= 100 ? 'Free' : 'R4.99'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tax</span>
-                  <span className="font-medium">${(total * 0.08).toFixed(2)}</span>
+                  <span className="font-medium">R{(total * 0.08).toFixed(2)}</span>
                 </div>
               </div>
               <Separator className="my-4" />
               <div className="flex justify-between">
                 <span className="font-display text-lg font-bold">Total</span>
                 <span className="font-display text-xl font-bold">
-                  ${(total + (total >= 35 ? 0 : 4.99) + total * 0.08).toFixed(2)}
+                  R{(total + (total >= 35 ? 0 : 4.99) + total * 0.08).toFixed(2)}
                 </span>
               </div>
        <Button onClick={handleCheckout} variant="hero" size="lg" className="mt-6 w-full">
@@ -186,7 +186,7 @@ const handleCheckout = async () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <p className="mt-4 text-center text-xs text-muted-foreground">
-                Free shipping on orders over $35
+                Free shipping on orders over R100
               </p>
             </div>
           </div>

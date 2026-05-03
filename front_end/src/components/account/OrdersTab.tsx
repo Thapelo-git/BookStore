@@ -78,7 +78,7 @@ export const OrdersTab = () => {
                 </div>
               ))}
               <div className="ml-auto text-right">
-                <p className="font-display text-xl font-bold">${order.total.toFixed(2)}</p>
+                <p className="font-display text-xl font-bold">R{order.total.toFixed(2)}</p>
                 <p className="text-sm text-muted-foreground">
                   {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
                 </p>
@@ -87,11 +87,11 @@ export const OrdersTab = () => {
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
               <div className="text-sm text-muted-foreground">
-                {order.trackingNumber ? (
+                {/* {order.trackingNumber ? (
                   <span>Tracking: <span className="font-medium text-foreground">{order.trackingNumber}</span></span>
                 ) : (
                   <span>No tracking available</span>
-                )}
+                )} */}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">

@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+  DropdownMenuSeparator, 
   DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
 
@@ -95,13 +95,13 @@ export function Header() {
                     <p className="text-sm font-medium">{user?.name}</p>
                     <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
                   </div>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator /> 
                   <DropdownMenuItem asChild>
                     <Link to={getDashboardLink()}>Dashboard</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  {/* <DropdownMenuItem asChild>
                     <Link to="/orders">My Orders</Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="text-destructive">
                     Sign Out

@@ -151,7 +151,7 @@ const RegisterPage: React.FC = () => {
                     className={`appearance-none block w-full px-3 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
                       nameError ? 'border-red-300' : 'border-gray-300'
                     }`}
-                    placeholder="Enter your full name"
+                    // placeholder="Enter your full name"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -181,7 +181,7 @@ const RegisterPage: React.FC = () => {
                     className={`appearance-none block w-full px-3 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
                       emailError ? 'border-red-300' : 'border-gray-300'
                     }`}
-                    placeholder="Enter your email address"
+                    // placeholder="Enter your email address"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">

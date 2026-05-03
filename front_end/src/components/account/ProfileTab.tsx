@@ -202,7 +202,7 @@ export const ProfileTab = () => {
                         {book.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">{book.author}</p>
-                      <p className="mt-auto font-bold">${book.price.toFixed(2)}</p>
+                      <p className="mt-auto font-bold">R{book.price.toFixed(2)}</p>
                     </Link>
                   ))}
                 </div>
