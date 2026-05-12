@@ -8,8 +8,7 @@ import {
 } from '../types/book';
 import { SavedAddress } from '../contexts/AddressContext';
 
-const API_BASE_URL = 'http://localhost:5002/api';
-
+const API_BASE_URL = 'https://bookstore-backend-0d3o.onrender.com/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,

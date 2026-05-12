@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 
 import { BookCard } from '../books/BookCard';
-import { Button } from '../ui/button';
+//import { Button } from '../ui/button';
 import { Book } from '../../types/book';
 interface Props {
   books: Book[];
@@ -27,12 +27,12 @@ console.log(bestsellers)
               </p>
             </div>
           </div>
-          <Link to="/bestsellers">
+          {/* <Link to="/bestsellers">
             <Button variant="outline">
               See All Bestsellers
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </Link>
+          </Link> */}
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
