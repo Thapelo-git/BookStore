@@ -9,16 +9,16 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/Label';
 import { Textarea } from '../../components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from '../../components/ui/select';
 import { Save } from 'lucide-react';
 import { Book } from '../../types/book';
-import { categories } from '../../data/mockData';
+// import { categories } from '../../data/mockData';
 import { toast } from 'sonner';
 
 interface EditBookDialogProps {
@@ -136,7 +136,7 @@ export function EditBookDialog({ book, open, onOpenChange, onSave }: EditBookDia
             <Textarea value={form.description} onChange={(e) => handleChange('description', e.target.value)} rows={3} />
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label>Category *</Label>
             <Select value={form.category} onValueChange={(v) => handleChange('category', v)}>
               <SelectTrigger>
@@ -148,7 +148,7 @@ export function EditBookDialog({ book, open, onOpenChange, onSave }: EditBookDia
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">

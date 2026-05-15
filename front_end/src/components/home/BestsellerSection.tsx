@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, TrendingUp } from 'lucide-react';
+
+import {  TrendingUp } from 'lucide-react';
 
 import { BookCard } from '../books/BookCard';
 //import { Button } from '../ui/button';

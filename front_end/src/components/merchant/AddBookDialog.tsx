@@ -98,21 +98,32 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     const payload: BookCreateRequest = {
-      title: form.title,
-      author: form.author,
-      description: form.description,
-      price: Number(form.price),
-      originalPrice: form.originalPrice
-        ? Number(form.originalPrice)
-        : undefined, 
-      coverImage: form.coverImage,
-      category: form.category,
-      stock: Number(form.stock),
-      publishedDate: new Date().toISOString(),
-      isbn: form.isbn,
-      pages: Number(form.pages),
-      language: form.language,
-    };
+  title: form.title,
+  author: form.author,
+  description: form.description,
+  price: Number(form.price),
+
+  originalPrice: form.originalPrice
+    ? Number(form.originalPrice)
+    : undefined,
+
+  coverImage: form.coverImage,
+  category: form.category,
+  stock: Number(form.stock),
+
+  rating: 0,
+  reviewCount: 0,
+
+  publishedDate: new Date().toISOString(),
+
+  isbn: form.isbn,
+  pages: Number(form.pages),
+  language: form.language,
+
+merchantId: "",
+merchantName: "",
+createdBy: "",
+};
 
     if (mode === 'create') {
       const response = await bookService.create(payload);

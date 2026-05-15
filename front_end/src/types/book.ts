@@ -18,17 +18,17 @@ export interface BookCreateRequest {
   coverImage: string;
   category: string;
   stock: number;
-  rating:number;
-  reviewCount:number;
+  rating?:number;
+  reviewCount?:number;
   publishedDate: string;
   isbn: string;
   pages: number;
   language: string;
   featured?: boolean;
   bestseller?: boolean;
-  merchantId:string;
-  merchantName:string;
-  createdBy:string;
+  merchantId?:string;
+  merchantName?:string;
+  createdBy?:string;
   
 }
 export interface User {
@@ -137,4 +137,26 @@ export interface MerchantOrder {
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   createdAt: string;
+}
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+
+  login: (credentials: LoginCredentials) => Promise<User | undefined>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
+  logout: () => void;
+  clearError: () => void;
+
+  updateProfile: (profileData: {
+    name: string;
+    email: string;
+  }) => Promise<void>;
+
+  changePassword: (passwordData: {
+    currentPassword: string;
+    newPassword: string;
+  }) => Promise<void>;
 }

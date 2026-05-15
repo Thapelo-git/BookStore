@@ -1,21 +1,18 @@
-import { useState } from 'react';
+
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Heart, ShoppingCart, Trash2, Star } from 'lucide-react';
-import { useBooks} from '../../hooks/useBooks';
+
 import { useWishlist } from '../../contexts/WishlistContext';
 import { Link } from 'react-router-dom';
-import { toast } from '../../hooks/use-toast';
+
 import { Book } from '../../types/book';
 import { useCart } from '../../contexts/CartContext';
 
 
 
 export const WishlistTab = () => {
-     const { 
-    books, 
-    
-  } = useBooks();
+ 
     const { wishlist, removeFromWishlist } = useWishlist();
  
   

@@ -2,7 +2,7 @@ import { Card, CardContent,  } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { CheckCircle, Truck, Clock, Package, Eye } from 'lucide-react';
-import { Order,Book } from '../../types/book';
+import { Order} from '../../types/book';
 import { orderService } from '../../services/api';
 import { useEffect,useState } from 'react';
 

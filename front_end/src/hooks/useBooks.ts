@@ -36,7 +36,7 @@ export const useBooks = (): UseBooksReturn => {
     page: 1,
     limit: 6,
     sortBy: 'createdAt',
-    sortOrder: 'desc'
+    // sortOrder: 'desc'
   });
 
   // Refs to prevent unnecessary re-renders

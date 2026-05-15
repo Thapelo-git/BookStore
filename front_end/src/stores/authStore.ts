@@ -13,7 +13,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
-
+ 
         updateProfile: async (profileData: { name: string; email: string }) => {
         set({ isLoading: true, error: null });
         try {

@@ -41,9 +41,9 @@ useEffect(() => {
 }, [books, user]);
 const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const handleAddBook = (newBook: Book) => {
-    // Optionally, you can refetch books or update state if needed
-  };
+  // const handleAddBook = (newBook: Book) => {
+  //   // Optionally, you can refetch books or update state if needed
+  // };
 const handleEditBook = async (updatedBook: Book) => {
   try {
     await bookService.update(updatedBook._id, updatedBook);
