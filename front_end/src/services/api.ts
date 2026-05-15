@@ -126,28 +126,22 @@ export const authService = {
 };
 
 export const bookService = {
-  getAll: (params?: BookQueryParams) => {
+getAll: (params?: BookQueryParams) => {
+  const cleanParams: Partial<BookQueryParams> = {};
 
-    const cleanParams: Partial<BookQueryParams> = {};
+  if (params) {
+    (Object.keys(params) as (keyof BookQueryParams)[]).forEach((key) => {
+      const value = params[key];
 
-    if (params) {
-      Object.keys(params).forEach((key) => {
+      if (value !== undefined && value !== '' && value !== null) {
+        (cleanParams as Record<string, unknown>)[key] = value;
+      }
+    });
+  }
 
-        const typedKey = key as keyof BookQueryParams;
-        const value = params[typedKey];
-
-        if (value !== undefined && value !== '' && value !== null) {
-          cleanParams[key] = value as BookQueryParams[keyof BookQueryParams];
-        }
-      });
-    }
-  
-
-     
-    console.log('📚 Getting books with cleaned params:', cleanParams);
-    return api.get('/books', { params: cleanParams });
-  },
-  
+  console.log('📚 Getting books with cleaned params:', cleanParams);
+  return api.get('/books', { params: cleanParams });
+},
   getById: (id: string) => {
     console.log(`📖 Getting book by ID: ${id}`);
     return api.get(`/books/${id}`);

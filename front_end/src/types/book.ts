@@ -8,6 +8,8 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
+  role: UserRole;
 }
 export interface BookCreateRequest {
   title: string;

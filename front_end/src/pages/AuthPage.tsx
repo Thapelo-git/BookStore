@@ -119,7 +119,7 @@ const [email, setEmail] = useState('');
       if (!validateForm()) {
         return;
       }
-  
+   
       try {
         await register({
           name: formData.name,

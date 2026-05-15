@@ -19,7 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { useAuthStore } from '../stores/authStore'
 import { useBooks } from '../hooks/useBooks';
 import { AddBookDialog } from '../components/merchant/AddBookDialog';
-import { Book } from '../types/book';
+import { Book ,BookCreateRequest} from '../types/book';
 import { toast } from 'sonner';
 import { useState,useEffect } from 'react';
 import { MerchantOrdersTab } from '../components/merchant/MerchantOrdersTab';
@@ -41,9 +41,40 @@ useEffect(() => {
 }, [books, user]);
 const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  // const handleAddBook = (newBook: Book) => {
-  //   // Optionally, you can refetch books or update state if needed
-  // };
+  const handleAddBook = async (bookData: BookCreateRequest) => {
+  try {
+    const payload: BookCreateRequest = {
+      ...bookData,
+
+      rating: 0,
+      reviewCount: 0,
+
+      merchantId: user?.id,
+      merchantName: user?.name,
+      createdBy: user?.id,
+
+      publishedDate: new Date().toISOString(),
+    };
+
+    const response = await bookService.create(payload);
+
+    if (response.data.success) {
+      const newBook = response.data.data;
+
+      setMerchantBookList((prev) => [...prev, newBook]);
+
+      toast.success("Book added successfully!");
+    } else {
+      toast.error(response.data.message || "Failed to add book");
+    }
+  } catch (error: any) {
+    toast.error(
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to add book"
+    );
+  }
+};
 const handleEditBook = async (updatedBook: Book) => {
   try {
     await bookService.update(updatedBook._id, updatedBook);
@@ -75,7 +106,7 @@ const handleEditBook = async (updatedBook: Book) => {
   const stats = [
     {
       title: 'Total Sales',
-      value: '$12,458',
+      value: 'R12,458',
       change: '+18.2%',
       icon: DollarSign,
       color: 'bg-primary/10 text-primary',

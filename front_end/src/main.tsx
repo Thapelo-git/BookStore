@@ -3,14 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { CartProvider } from './contexts/CartContext.tsx'
-import { AuthProvider } from './contexts/AuthContext.tsx'
+
 import { WishlistProvider } from './contexts/WishlistContext.tsx'
 import { AddressProvider } from './contexts/AddressContext.tsx'
 import { ReviewProvider } from './contexts/ReviewContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
+    
       <ReviewProvider>
       <WishlistProvider>
     <CartProvider>
@@ -20,6 +20,6 @@ createRoot(document.getElementById('root')!).render(
     </CartProvider>
     </WishlistProvider>
     </ReviewProvider>
-    </AuthProvider>
+    
   </StrictMode>,
 )

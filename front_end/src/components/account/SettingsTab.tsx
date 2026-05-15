@@ -4,11 +4,12 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/Label';
 
-import { useAuth } from '../../contexts/AuthContext';
+
 import { toast } from '../../hooks/use-toast';
+import { useAuthStore } from '../../stores/authStore';
 
 export const SettingsTab = () => {
-  const { user } = useAuth();
+  const {user} = useAuthStore();
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
  
