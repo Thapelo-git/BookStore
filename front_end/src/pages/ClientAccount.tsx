@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+
 import {
   User,
   Package,
@@ -10,12 +10,12 @@ import {
  
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
 import { useAuthStore } from '../stores/authStore';
 
 import { Layout } from '../components/layout/Layout';
-import  { useEffect, useState } from 'react';
+import  {  useState } from 'react';
  
 import { OrdersTab } from '../components/account/OrdersTab';
 import { WishlistTab } from '../components/account/WishlistTab';

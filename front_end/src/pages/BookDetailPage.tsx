@@ -1,4 +1,4 @@
-import React ,{useState} from 'react';
+import {useState} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Layout } from '../components/layout/Layout';

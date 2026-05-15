@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthStore } from './stores/authStore';
 //import Navigation from './components/Navigation';
 
-import BookForm from './components/BookForm';
+// import BookForm from './components/BookForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import Index from './pages/Index';
 //import Home from './pages/Home'; 
@@ -70,7 +70,7 @@ function App() {
                 // </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/books/new"
               element={
                 <ProtectedRoute>
@@ -79,7 +79,7 @@ function App() {
                   </div>
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route path="/cart" element={
               <ProtectedRoute>
                   <div className="container mx-auto px-4 py-8">
@@ -94,7 +94,7 @@ function App() {
                   </div>
                 // </ProtectedRoute>
               } />
-            <Route
+            {/* <Route
               path="/books/edit/:id"
               element={
                 <ProtectedRoute>
@@ -103,7 +103,7 @@ function App() {
                   </div>
                 </ProtectedRoute>
               }
-            />
+            /> */}
                        <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/login" replace />} />
             <Route
   path="/client"

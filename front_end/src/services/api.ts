@@ -4,7 +4,7 @@ import {
   RegisterCredentials, 
   BookCreateRequest, 
   BookUpdateRequest,
-  BookQueryParams,CartItem,Address,OrderItemRequest 
+  BookQueryParams,Address,OrderItemRequest 
 } from '../types/book';
 import { SavedAddress } from '../contexts/AddressContext';
 
@@ -127,16 +127,22 @@ export const authService = {
 
 export const bookService = {
   getAll: (params?: BookQueryParams) => {
-    // Clean up params before sending
-    const cleanParams: BookQueryParams = {};
+
+    const cleanParams: Partial<BookQueryParams> = {};
+
     if (params) {
-      Object.keys(params).forEach(key => {
-        const value = params[key as keyof BookQueryParams];
+      Object.keys(params).forEach((key) => {
+
+        const typedKey = key as keyof BookQueryParams;
+        const value = params[typedKey];
+
         if (value !== undefined && value !== '' && value !== null) {
-          cleanParams[key as keyof BookQueryParams] = value;
+          cleanParams[key] = value as BookQueryParams[keyof BookQueryParams];
         }
       });
     }
+  
+
      
     console.log('📚 Getting books with cleaned params:', cleanParams);
     return api.get('/books', { params: cleanParams });
