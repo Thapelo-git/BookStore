@@ -44,7 +44,7 @@ function App() {
         <main>
           <Routes>
             <Route 
-              path="/" 
+              path="/home" 
               element={!isAuthenticated ? <Index/> : <RoleRedirect />} 
             />
             {/* <Route 
