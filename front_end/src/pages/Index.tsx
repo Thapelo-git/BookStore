@@ -11,9 +11,9 @@ function Index() {
  const [books, setBooks] = useState<Book[]>([]);
    const [loading, setLoading] = useState(true);
  
-   
+   //https://bookstore-backend-0d3o.onrender.com/api/books
      useEffect(() => {
-       fetch("https://bookstore-backend-0d3o.onrender.com/api/books") 
+       fetch("http://localhost:5002/api/books") 
          .then((res) => res.json())
          .then((data) => {
            const allBooks: Book[] = data.data || [];

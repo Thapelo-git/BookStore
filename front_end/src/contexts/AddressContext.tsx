@@ -25,9 +25,14 @@ export function AddressProvider({ children }: { children: React.ReactNode }) {
   const [addresses, setAddresses] = useState<SavedAddress[]>([]);
  const isAuthenticated = useAuthStore((state) => state.isAuthenticated); 
 const fetchAddresses = useCallback(async () => {
+  // Check for token in localStorage (or from authStore if available)
+  const token = localStorage.getItem('token');
+  if (!token) {
+    setAddresses([]);
+    return;
+  }
   try {
     const res = await addressService.getAll();
-
     const mapped = res.data.data.map((a: any) => ({
       id: a._id,
       label: a.label,
@@ -38,10 +43,20 @@ const fetchAddresses = useCallback(async () => {
       country: a.country,
       isDefault: a.isDefault
     }));
-
     setAddresses(mapped);
-  } catch (error) {
-    console.error("Failed to fetch addresses");
+  } catch (error: any) {
+    if (error?.response?.status === 401) {
+      // Unauthorized, clear addresses and optionally trigger logout
+      setAddresses([]);
+      // Optionally, show a toast or trigger logout here
+      toast({
+        title: 'Session expired',
+        description: 'Please log in again.',
+        variant: 'destructive',
+      });
+    } else {
+      console.error("Failed to fetch addresses");
+    }
   }
 }, []);
 

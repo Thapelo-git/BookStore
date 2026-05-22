@@ -1,5 +1,5 @@
 import { useState ,useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Mail, Lock, User } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -154,9 +154,9 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
       <div className="hidden w-1/2 flex-col justify-between bg-primary p-12 lg:flex">
         <div className="flex items-center gap-3">
           <BookOpen className="h-10 w-10 text-primary-foreground" />
-          <span className="font-display text-2xl font-bold text-primary-foreground">
+          <Link to="/" className="font-display text-2xl font-bold text-primary-foreground">
             BookNest
-          </span>
+          </Link>
         </div>
         <div>
           <h1 className="font-display text-4xl font-bold leading-tight text-primary-foreground">
@@ -179,7 +179,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
           <div className="mb-8 text-center lg:hidden">
             <div className="mb-4 flex items-center justify-center gap-2">
               <BookOpen className="h-8 w-8 text-primary" />
-              <span className="font-display text-xl font-bold">BookNest</span>
+              <Link to="/" className="font-display text-xl font-bold">BookNest</Link>
             </div>
           </div>
 

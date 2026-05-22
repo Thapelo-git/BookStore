@@ -23,15 +23,15 @@ import { useNavigate } from 'react-router-dom';
 
 // RoleRedirect component to send authenticated users to their dashboard based on role
 function RoleRedirect() {
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   useEffect(() => {
-    if (!user) return;
+    if (!isAuthenticated || !user) return;
     if (user.role === 'client') navigate('/client', { replace: true });
     else if (user.role === 'merchant') navigate('/merchant', { replace: true });
     else if (user.role === 'admin') navigate('/admin', { replace: true });
     else navigate('/login', { replace: true });
-  }, [user, navigate]);
+  }, [user, isAuthenticated, navigate]);
   return null;
 }
 function App() {
@@ -40,22 +40,16 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-100">
         {/* <Navigation /> */}
-        
         <main>
           <Routes>
             <Route 
-              path="/home" 
-              element={!isAuthenticated ? <Index/> : <RoleRedirect />} 
+              path="/" 
+              element={<BooksPage />} 
             />
-            {/* <Route 
-              path="/register" 
-              element={!isAuthenticated ? <RegisterPage/> : <Navigate to="/home" replace />} 
-            /> */}
             <Route 
               path="/login" 
               element={!isAuthenticated ? <AuthPage/> : <RoleRedirect />} 
             />
-  
             <Route 
               path="/reset-password" 
               element={!isAuthenticated ? <ResetPassword/> : <Navigate to="/books" replace />} 
@@ -63,77 +57,50 @@ function App() {
             <Route
               path="/books"
               element={
-                // <ProtectedRoute>
-                  <div className="container mx-auto px-4 py-8">
-                    <BooksPage/>
-                  </div>
-                // </ProtectedRoute>
+                <div className="container mx-auto px-4 py-8">
+                  <BooksPage/>
+                </div>
               }
             />
-            {/* <Route
-              path="/books/new"
-              element={
-                <ProtectedRoute>
-                  <div className="container mx-auto px-4 py-8">
-                    <BookForm />
-                  </div>
-                </ProtectedRoute>
-              }
-            /> */}
             <Route path="/cart" element={
               <ProtectedRoute>
-                  <div className="container mx-auto px-4 py-8">
-                   <CartPage />
-                  </div>
-                </ProtectedRoute>
-              } />
+                <div className="container mx-auto px-4 py-8">
+                  <CartPage />
+                </div>
+              </ProtectedRoute>
+            } />
             <Route path="/book/:id" element={
-              // <ProtectedRoute>
-                  <div className="container mx-auto px-4 py-8">
-                   <BookDetailPage/>
-                  </div>
-                // </ProtectedRoute>
-              } />
-            {/* <Route
-              path="/books/edit/:id"
+                <div className="container mx-auto px-4 py-8">
+                  <BookDetailPage/>
+                </div>
+            } />
+            <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/login" replace />} />
+            <Route
+              path="/client"
               element={
-                <ProtectedRoute>
-                  <div className="container mx-auto px-4 py-8">
-                    <BookForm />
-                  </div>
+                <ProtectedRoute allowedRoles={['client']}>
+                  <ClientAccount />
                 </ProtectedRoute>
               }
-            /> */}
-                       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword/> : <Navigate to="/login" replace />} />
+            />
             <Route
-  path="/client"
-  element={
-    <ProtectedRoute allowedRoles={['client']}>
-      <ClientAccount />
-    </ProtectedRoute>
-  }
-/>
-
-           <Route
-  path="/merchant"
-  element={
-    <ProtectedRoute allowedRoles={['merchant']}>
-      <MerchantDashboard />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/admin"
-  element={
-    <ProtectedRoute allowedRoles={['admin']}>
-      <AdminDashboard/>
-    </ProtectedRoute>
-  }
-/>
-
+              path="/merchant"
+              element={
+                <ProtectedRoute allowedRoles={['merchant']}>
+                  <MerchantDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard/>
+                </ProtectedRoute>
+              }
+            />
             <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePassword/></ProtectedRoute>} />
-
           </Routes>
         </main>
       </div>

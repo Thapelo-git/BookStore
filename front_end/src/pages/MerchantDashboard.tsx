@@ -28,35 +28,38 @@ import { bookService } from "../services/api";
 
 type MerchantTab = 'dashboard' | 'products' | 'orders' | 'analytics' | 'settings';
 const MerchantDashboard = () => {
-   const { user,  logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const { books } = useBooks();
   // Only show books listed by this merchant
   const [activeTab, setActiveTab] = useState<MerchantTab>('dashboard');
-    const [merchantBookList, setMerchantBookList] = useState<Book[]>(
-    books.filter((book) => book.merchantId === user?.id ))
-useEffect(() => {
-  setMerchantBookList(
-    books.filter(book => book.merchantId === user?.id)
+  const [merchantBookList, setMerchantBookList] = useState<Book[]>(
+    books.filter((book) => book.merchantId === user?.id)
   );
-}, [books, user]);
-const [editingBook, setEditingBook] = useState<Book | null>(null);
+  useEffect(() => {
+    setMerchantBookList(
+      books.filter(book => book.merchantId === user?.id)
+    );
+  }, [books, user]);
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  // Fallback if user is not loaded
+  if (!user) {
+    return <div className="flex items-center justify-center min-h-screen text-xl font-bold">User not found. Please log in again.</div>;
+  }
+
   const handleAddBook = async (bookData: BookCreateRequest) => {
-  try {
-    const payload: BookCreateRequest = {
-      ...bookData,
-
-      rating: 0,
-      reviewCount: 0,
-
-      merchantId: user?.id,
-      merchantName: user?.name,
-      createdBy: user?.id,
-
-      publishedDate: new Date().toISOString(),
-    };
-
-    const response = await bookService.create(payload);
+    try {
+      const payload: BookCreateRequest = {
+        ...bookData,
+        rating: 0,
+        reviewCount: 0,
+        merchantId: user.id,
+        merchantName: user.name,
+        createdBy: user.id,
+        publishedDate: new Date().toISOString(),
+      };
+      const response = await bookService.create(payload);
 
     if (response.data.success) {
       const newBook = response.data.data;
@@ -238,7 +241,7 @@ const navItems: { key: MerchantTab; label: string; icon: React.ElementType }[] =
           <Card className="shadow-soft">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>All Products ({merchantBooks.length})</CardTitle>
-              <AddBookDialog onAddBook={handleAddBook} merchantId="m1" merchantName={user?.name || 'Merchant'}>
+              <AddBookDialog onAddBook={handleAddBook} merchantId={user.id} merchantName={user.name}>
                 <Button variant="default" size="sm"><Plus className="mr-2 h-4 w-4" />Add Book</Button>
               </AddBookDialog>
             </CardHeader>
@@ -276,16 +279,30 @@ const navItems: { key: MerchantTab; label: string; icon: React.ElementType }[] =
           </div>
           <nav className="flex-1 space-y-1 p-4">
             {navItems.map(({ key, label, icon: Icon }) => (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
-                  activeTab === key ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted'
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-                {label}
-              </button>
+              key === 'dashboard' ? (
+                <Link
+                  key={key}
+                  to="/merchant"
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                    activeTab === key ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted'
+                  }`}
+                  onClick={() => setActiveTab(key)}
+                >
+                  <Icon className="h-5 w-5" />
+                  {label}
+                </Link>
+              ) : (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                    activeTab === key ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted'
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  {label}
+                </button>
+              )
             ))}
           </nav>
           <div className="border-t border-border p-4">
@@ -313,7 +330,7 @@ const navItems: { key: MerchantTab; label: string; icon: React.ElementType }[] =
           </h1>
           <div className="flex items-center gap-3">
             {activeTab === 'dashboard' && (
-              <AddBookDialog onAddBook={handleAddBook} merchantId="m1" merchantName={user?.name || 'Merchant'}>
+              <AddBookDialog onAddBook={handleAddBook} merchantId={user.id} merchantName={user.name}>
                 <Button variant="default" size="sm"><Plus className="mr-2 h-4 w-4" />Add Book</Button>
               </AddBookDialog>
             )}

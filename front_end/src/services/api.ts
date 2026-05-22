@@ -7,8 +7,8 @@ import {
   BookQueryParams,Address,OrderItemRequest 
 } from '../types/book';
 import { SavedAddress } from '../contexts/AddressContext';
-
-const API_BASE_URL = 'https://bookstore-backend-0d3o.onrender.com/api';
+//https://bookstore-backend-0d3o.onrender.com/api 
+const API_BASE_URL = 'http://localhost:5002/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
@@ -188,11 +188,11 @@ export const orderService = {
   }
 };
 export const addressService = {
-  getAll: () => api.get('/addresses'),
+  
 
   create: (address: Omit<SavedAddress, 'id'>) =>
     api.post('/addresses', address),
-
+getAll: () => api.get('/addresses'),
   update: (id: string, address: Partial<SavedAddress>) =>
     api.put(`/addresses/${id}`, address),
 
