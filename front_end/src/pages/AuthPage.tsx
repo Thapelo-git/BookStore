@@ -17,6 +17,7 @@ const AuthPage = () => {
       password: '',
       confirmPassword: '' ,
       role:''
+      
     });
     const [passwordError, setPasswordError] = useState('');
     const [touched, setTouched] = useState({

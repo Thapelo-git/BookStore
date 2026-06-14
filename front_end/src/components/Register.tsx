@@ -81,8 +81,10 @@ const RegisterPage: React.FC = () => {
     try {
       await register({
         name: formData.name,
-        email: formData.email,
-        password: formData.password,
+        email: '',
+        password: '',
+        confirmPassword: '',
+        role: 'admin'
       });
       navigate('/books');} catch (error: unknown) {
   let message = 'Registration failed';

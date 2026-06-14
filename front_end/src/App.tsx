@@ -5,7 +5,7 @@ import { useAuthStore } from './stores/authStore';
 
 // import BookForm from './components/BookForm';
 import ProtectedRoute from './components/ProtectedRoute';
-import Index from './pages/Index';
+//import Index from './pages/Index';
 //import Home from './pages/Home'; 
 import BooksPage from './pages/BooksPage';
 import Profile from './components/Profile';
