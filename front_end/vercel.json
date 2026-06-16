@@ -3,10 +3,6 @@
     {
       "source": "/api/:path*",
       "destination": "https://bookstore-backend-9s0t.onrender.com/api/:path*"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/"
     }
   ]
 }
