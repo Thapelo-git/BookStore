@@ -8,16 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs'
 
 import { useAuthStore } from '../stores/authStore';
 import { isAxiosError } from 'axios';
+import { RegisterCredentials } from '../types/book';
 
 const AuthPage = () => {
-   const { login,register, isLoading, error, clearError, isAuthenticated,user } = useAuthStore();
-  const [formData, setFormData] = useState({
+   const { login, register, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
+  const [formData, setFormData] = useState<RegisterCredentials>({
       name: '',
       email: '',
       password: '',
       confirmPassword: '' ,
-      role:''
-      
+      role: 'client'
     });
     const [passwordError, setPasswordError] = useState('');
     const [touched, setTouched] = useState({
@@ -55,10 +55,11 @@ const AuthPage = () => {
       };
     
       const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({
-          ...formData,
-          [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+        setFormData(prev => ({
+          ...prev,
+          [name]: name === 'role' ? (value as RegisterCredentials['role']) : value,
+        }));
       };
 
        const validateForm = () => {
