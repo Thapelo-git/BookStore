@@ -10,7 +10,7 @@ import { useBooks } from "../hooks/useBooks";
 const BOOKS_PER_PAGE = 8;
 
 const BooksPage: React.FC = () => {
-  const { books } = useBooks();
+  const { books, loading, error } = useBooks();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,8 +58,19 @@ const BooksPage: React.FC = () => {
           />
         </div>
 
-        {/* Books */}
-        {paginatedBooks.length > 0 ? (
+        {books.length === 0 && !loading && error && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 mb-6 text-center text-red-700">
+            <p className="font-medium">Unable to load books.</p>
+            <p>{error}</p>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">⏳</div>
+            <h3 className="text-xl font-semibold">Loading books…</h3>
+          </div>
+        ) : paginatedBooks.length > 0 ? (
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {paginatedBooks.map((book) => (

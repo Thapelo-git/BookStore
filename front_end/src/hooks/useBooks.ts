@@ -42,7 +42,6 @@ export const useBooks = (): UseBooksReturn => {
   // Refs to prevent unnecessary re-renders
   const filtersRef = useRef(filters);
   const isMountedRef = useRef(true);
-  const initialLoadDoneRef = useRef(false);
 
   const clearError = () => setError(null);
 
@@ -72,28 +71,33 @@ export const useBooks = (): UseBooksReturn => {
       
       if (!isMountedRef.current) return;
 
-      if (response.data.success) {
-        let booksData: Book[] = [];
-        
-        if (Array.isArray(response.data.data)) {
-          booksData = response.data.data;
-        } else if (Array.isArray(response.data.books)) {
-          booksData = response.data.books;
-        } else {
-          booksData = [];
-        }
+      const payload = response.data;
+      const hasSuccessFlag = typeof payload?.success === 'boolean';
+      const isSuccess = hasSuccessFlag ? payload.success : true;
+      let booksData: Book[] = [];
 
-        console.log('📚 Books loaded:', booksData.length);
+      if (Array.isArray(payload)) {
+        booksData = payload;
+      } else if (Array.isArray(payload?.data)) {
+        booksData = payload.data;
+      } else if (Array.isArray(payload?.books)) {
+        booksData = payload.books;
+      } else if (Array.isArray(payload?.books?.data)) {
+        booksData = payload.books.data;
+      }
+
+      if (isSuccess) {
+        console.log('📚 Books loaded:', booksData.length, { queryParams, payload });
         setBooks(booksData);
         
-        if (response.data.pagination) {
-          setPagination(response.data.pagination);
+        if (payload?.pagination) {
+          setPagination(payload.pagination);
         }
 
         filtersRef.current = queryParams;
         setFilters(queryParams);
       } else {
-        const errorMsg = response.data.message || 'Failed to load books';
+        const errorMsg = payload?.message || 'Failed to load books';
         setError(errorMsg);
       }
     } catch (err: any) {
@@ -205,20 +209,9 @@ export const useBooks = (): UseBooksReturn => {
     }
   }, []); // No dependencies
 
-  // Load books ONLY ONCE on initial mount
   useEffect(() => {
     isMountedRef.current = true;
-    
-    const currentToken = localStorage.getItem('token');
-    
-    
-    if (!initialLoadDoneRef.current) {
-  initialLoadDoneRef.current = true;
-  loadBooks();
-}else if (!currentToken) {
-     
-      setBooks([]);
-    }
+    loadBooks();
 
     return () => {
       isMountedRef.current = false;
