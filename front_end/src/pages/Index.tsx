@@ -13,11 +13,10 @@ function Index() {
  
    //https://bookstore-backend-0d3o.onrender.com/api/books
      useEffect(() => {
-       fetch("http://localhost:5002/api/books") 
+       fetch('/api/books')
          .then((res) => res.json())
          .then((data) => {
-           const allBooks: Book[] = data.data || [];
-          
+           const allBooks: Book[] = data.data || data.books || data || [];
            setBooks(allBooks);
            setLoading(false);
          })

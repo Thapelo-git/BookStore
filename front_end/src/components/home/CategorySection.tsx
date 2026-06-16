@@ -16,10 +16,10 @@ export function BookGrid() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5002/api/books") // replace with your endpoint
+    fetch('/api/books')
       .then((res) => res.json())
       .then((data) => {
-        const allBooks: Book[] = data.data || [];
+        const allBooks: Book[] = data.data || data.books || data || [];
         // Only show public books
         const publicBooks = allBooks.filter((b) => b.isPublic);
         setBooks(publicBooks);

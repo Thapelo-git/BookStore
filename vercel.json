@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://bookstore-backend-9s0t.onrender.com/api/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/"
     }
